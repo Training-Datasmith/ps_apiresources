@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -131,7 +132,8 @@ class WebserviceKey
             ),
         ],
         allowMissingFields: true,
-        groups: ['Create'])]
+        groups: ['Create']
+    )]
     public array $permissions;
 
     #[ApiProperty(openapiContext: ['type' => 'array', 'items' => ['type' => 'integer'], 'example' => [1, 3]])]

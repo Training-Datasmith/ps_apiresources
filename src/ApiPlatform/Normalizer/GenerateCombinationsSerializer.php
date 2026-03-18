@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -36,7 +38,7 @@ class GenerateCombinationsSerializer implements DenormalizerInterface
     {
         $groupedAttributes = [];
         foreach ($data['groupedAttributes'] as $attributeGroup) {
-            $groupedAttributes[$attributeGroup['attributeGroupId']] = array_map(static fn($attributeId): int => (int) $attributeId, $attributeGroup['attributeIds']);
+            $groupedAttributes[$attributeGroup['attributeGroupId']] = array_map(static fn ($attributeId): int => (int) $attributeId, $attributeGroup['attributeIds']);
         }
 
         return new GenerateProductCombinationsCommand(

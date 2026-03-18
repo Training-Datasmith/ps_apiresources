@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -215,11 +216,13 @@ class ProductCombinationEndpointTest extends ApiTestCase
         $pagesNumber = ceil(count($newCombinationIds) / $resultsPerPage);
         for ($page = 1; $page <= $pagesNumber; ++$page) {
             $offset = ($page - 1) * $resultsPerPage;
-            $paginatedCombinations = $this->getItem(sprintf(
-                '/products/%d/combination-ids?offset=%d&limit=%d',
-                $productId,
-                $offset,
-                $resultsPerPage),
+            $paginatedCombinations = $this->getItem(
+                sprintf(
+                    '/products/%d/combination-ids?offset=%d&limit=%d',
+                    $productId,
+                    $offset,
+                    $resultsPerPage
+                ),
                 ['product_read']
             );
             $expectedCombinationIds = array_slice($newCombinationIds, $offset, $resultsPerPage);
@@ -298,11 +301,13 @@ class ProductCombinationEndpointTest extends ApiTestCase
         $pagesNumber = ceil(count($newCombinationIds) / $resultsPerPage);
         for ($page = 1; $page <= $pagesNumber; ++$page) {
             $offset = ($page - 1) * $resultsPerPage;
-            $paginatedCombinations = $this->getItem(sprintf(
-                '/products/%d/combinations?offset=%d&limit=%d',
-                $productId,
-                $offset,
-                $resultsPerPage),
+            $paginatedCombinations = $this->getItem(
+                sprintf(
+                    '/products/%d/combinations?offset=%d&limit=%d',
+                    $productId,
+                    $offset,
+                    $resultsPerPage
+                ),
                 ['product_read']
             );
             $expectedCombinationIds = array_slice($newCombinationIds, $offset, $resultsPerPage);

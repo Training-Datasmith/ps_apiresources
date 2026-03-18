@@ -95,8 +95,13 @@ class GenerateApiTrackingTableCommand extends Command
             $io->success([
                 'API tracking table generated successfully!',
                 sprintf('📁 Saved to: %s', $outputFile),
-                sprintf('📊 Summary: %d implemented, %d in progress, %d missing (%s%% complete)',
-                    $implementedCount, $inProgressCount, $totalEndpoints - $implementedCount - $inProgressCount, $percentage),
+                sprintf(
+                    '📊 Summary: %d implemented, %d in progress, %d missing (%s%% complete)',
+                    $implementedCount,
+                    $inProgressCount,
+                    $totalEndpoints - $implementedCount - $inProgressCount,
+                    $percentage
+                ),
             ]);
 
             return Command::SUCCESS;
