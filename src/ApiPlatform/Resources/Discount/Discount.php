@@ -105,9 +105,9 @@ class Discount
     public string $description;
     public string $code;
     public bool $enabled;
-    public ?int $totalQuantity;
-    public ?int $quantityPerUser;
-    public ?DecimalNumber $reductionPercent;
+    public ?int $totalQuantity = null;
+    public ?int $quantityPerUser = null;
+    public ?DecimalNumber $reductionPercent = null;
     #[ApiProperty(
         openapiContext: [
             'type' => 'object',
@@ -128,9 +128,9 @@ class Discount
             ],
         ]
     )]
-    public ?array $reductionAmount;
-    public ?int $giftProductId;
-    public ?int $giftCombinationId;
+    public ?array $reductionAmount = null;
+    public ?int $giftProductId = null;
+    public ?int $giftCombinationId = null;
 
     // Conditions/compatibility values
     public bool $cheapestProduct;
@@ -183,7 +183,7 @@ class Discount
             ],
         ]
     )]
-    public ?array $productConditions;
+    public ?array $productConditions = null;
 
     #[ApiProperty(
         openapiContext: [
@@ -192,7 +192,7 @@ class Discount
             'minimum' => 0,
         ]
     )]
-    public ?int $minimumProductQuantity;
+    public ?int $minimumProductQuantity = null;
 
     #[ApiProperty(
         openapiContext: [
@@ -218,9 +218,9 @@ class Discount
             ],
         ]
     )]
-    public ?array $minimumAmount;
+    public ?array $minimumAmount = null;
 
-    public ?int $customerId;
+    public ?int $customerId = null;
     #[ApiProperty(
         openapiContext: [
             'type' => 'array',
@@ -228,7 +228,7 @@ class Discount
             'items' => ['type' => 'integer'],
         ]
     )]
-    public ?array $customerGroupIds;
+    public ?array $customerGroupIds = null;
 
     #[ApiProperty(
         openapiContext: [
@@ -237,7 +237,7 @@ class Discount
             'items' => ['type' => 'integer'],
         ]
     )]
-    public ?array $carrierIds;
+    public ?array $carrierIds = null;
 
     #[ApiProperty(
         openapiContext: [
@@ -246,7 +246,7 @@ class Discount
             'items' => ['type' => 'integer'],
         ]
     )]
-    public ?array $countryIds;
+    public ?array $countryIds = null;
     #[ApiProperty(
         openapiContext: [
             'type' => 'array',
@@ -254,14 +254,14 @@ class Discount
             'items' => ['type' => 'integer'],
         ]
     )]
-    public ?array $compatibleDiscountTypeIds;
+    public ?array $compatibleDiscountTypeIds = null;
     // End of conditions/compatibility values
 
     public bool $highlightInCart;
     public bool $allowPartialUse;
     public int $priority;
     public \DateTimeImmutable $validFrom;
-    public ?\DateTimeImmutable $validTo;
+    public ?\DateTimeImmutable $validTo = null;
 
     protected const QUERY_MAPPING = [
         '[localizedNames]' => '[names]',

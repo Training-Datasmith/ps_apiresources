@@ -89,7 +89,7 @@ class ApiClient
     #[Assert\Length(max: ApiClientSettings::MAX_DESCRIPTION_LENGTH)]
     public string $description;
 
-    public ?string $externalIssuer;
+    public ?string $externalIssuer = null;
 
     #[Assert\NotNull(groups: ['Create'])]
     public bool $enabled;
@@ -102,8 +102,6 @@ class ApiClient
 
     /**
      * Only used for the return of created API Client, it is the only endpoint where the secret is returned.
-     *
-     * @var string
      */
     public string $secret;
 }

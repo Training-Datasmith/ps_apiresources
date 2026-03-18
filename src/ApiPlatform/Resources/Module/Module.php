@@ -76,13 +76,13 @@ use PrestaShopBundle\ApiPlatform\Metadata\PaginatedList;
 )]
 class Module
 {
-    public ?int $moduleId;
+    public ?int $moduleId = null;
 
     public string $technicalName;
 
     public string $moduleVersion;
 
-    public ?string $installedVersion;
+    public ?string $installedVersion = null;
 
     public bool $enabled;
 

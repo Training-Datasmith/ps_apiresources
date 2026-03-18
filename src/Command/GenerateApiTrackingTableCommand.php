@@ -79,7 +79,7 @@ class GenerateApiTrackingTableCommand extends Command
             $io->section('🔍 Comparing CQRS endpoints with API implementations...');
             $matchedEndpoints = $this->compareCqrsWithApi($cqrsEndpoints, $apiEndpoints, $prStatusMap);
 
-            $apiCount = count(array_filter($matchedEndpoints, fn ($e) => $e['has_api']));
+            $apiCount = count(array_filter($matchedEndpoints, fn (array $e) => $e['has_api']));
             $io->info(sprintf('Matched %d CQRS endpoints with API implementations', $apiCount));
 
             // Step 4: Generate markdown table
@@ -139,7 +139,7 @@ class GenerateApiTrackingTableCommand extends Command
                 continue;
             }
 
-            if (0 === strpos($line, 'Class: ')) {
+            if (str_starts_with($line, 'Class: ')) {
                 $class = substr($line, 7);
                 $currentEndpoint['class'] = $class;
 
@@ -150,7 +150,7 @@ class GenerateApiTrackingTableCommand extends Command
                 continue;
             }
 
-            if (0 === strpos($line, 'Type: ')) {
+            if (str_starts_with($line, 'Type: ')) {
                 $currentEndpoint['type'] = substr($line, 6);
                 continue;
             }
@@ -362,13 +362,13 @@ class GenerateApiTrackingTableCommand extends Command
 
         ksort($domainGroups);
 
-        foreach ($domainGroups as $domain => &$endpoints) {
-            usort($endpoints, function ($a, $b) {
+        foreach ($domainGroups as &$endpoints) {
+            usort($endpoints, function (array $a, array $b): int {
                 if ($a['type'] !== $b['type']) {
                     return 'Command' === $a['type'] ? -1 : 1;
                 }
 
-                return strcasecmp($a['action'], $b['action']);
+                return strcasecmp((string) $a['action'], (string) $b['action']);
             });
         }
 
@@ -394,7 +394,7 @@ class GenerateApiTrackingTableCommand extends Command
         $count = 0;
         foreach ($domainGroups as $endpoints) {
             foreach ($endpoints as $endpoint) {
-                if (str_contains($endpoint['status'], '🚧 In Progress')) {
+                if (str_contains((string) $endpoint['status'], '🚧 In Progress')) {
                     ++$count;
                 }
             }
@@ -405,7 +405,7 @@ class GenerateApiTrackingTableCommand extends Command
 
     private function generateMarkdownTable(array $domainGroups, string $outputFile): void
     {
-        $totalEndpoints = array_sum(array_map('count', $domainGroups));
+        $totalEndpoints = array_sum(array_map(count(...), $domainGroups));
         $implementedCount = $this->countImplementedEndpoints($domainGroups);
         $inProgressCount = $this->countInProgressEndpoints($domainGroups);
         $missingCount = $totalEndpoints - $implementedCount - $inProgressCount;
@@ -422,7 +422,7 @@ class GenerateApiTrackingTableCommand extends Command
         $markdown .= "---\n\n";
 
         foreach ($domainGroups as $domain => $endpoints) {
-            $domainImplemented = count(array_filter($endpoints, fn ($e) => $e['hasApi']));
+            $domainImplemented = count(array_filter($endpoints, fn (array $e) => $e['hasApi']));
             $domainTotal = count($endpoints);
             $domainPercentage = $domainTotal > 0 ? round(($domainImplemented / $domainTotal) * 100, 1) : 0;
 
@@ -523,14 +523,14 @@ class GenerateApiTrackingTableCommand extends Command
                 $filename = $file['filename'];
 
                 // Check if it's an API resource file
-                if (str_contains($filename, 'src/ApiPlatform/Resources/') && str_ends_with($filename, '.php')) {
+                if (str_contains((string) $filename, 'src/ApiPlatform/Resources/') && str_ends_with((string) $filename, '.php')) {
                     // Extract CQRS references from the patch
                     $patch = $file['patch'] ?? '';
                     $foundEndpoints = $this->extractCqrsFromPatch($patch);
                     $endpoints = array_merge($endpoints, $foundEndpoints);
                 }
             }
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // Silently continue if we can't analyze PR changes
         }
 

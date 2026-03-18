@@ -60,5 +60,5 @@ class SupplierList
 
     public int $productsCount;
 
-    public ?string $logo;
+    public ?string $logo = null;
 }

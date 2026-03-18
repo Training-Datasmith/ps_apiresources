@@ -97,7 +97,7 @@ class CustomerAddress
     #[TypedRegex([
         'type' => TypedRegex::TYPE_ADDRESS,
     ])]
-    public ?string $address2;
+    public ?string $address2 = null;
 
     #[Assert\NotBlank(groups: ['Create'])]
     #[TypedRegex([
@@ -116,25 +116,25 @@ class CustomerAddress
     #[TypedRegex([
         'type' => TypedRegex::TYPE_DNI_LITE,
     ])]
-    public ?string $dni;
+    public ?string $dni = null;
 
-    public ?string $company;
+    public ?string $company = null;
 
-    public ?string $vatNumber;
+    public ?string $vatNumber = null;
 
     public int $stateId;
 
     #[TypedRegex([
         'type' => TypedRegex::TYPE_PHONE_NUMBER,
     ])]
-    public ?string $homePhone;
+    public ?string $homePhone = null;
 
     #[TypedRegex([
         'type' => TypedRegex::TYPE_PHONE_NUMBER,
     ])]
-    public ?string $mobilePhone;
+    public ?string $mobilePhone = null;
 
-    public ?string $other;
+    public ?string $other = null;
 
     public const QUERY_MAPPING = [
         '[id]' => '[addressId]',

@@ -88,7 +88,7 @@ class FoundCustomer
     #[ApiProperty(openapiContext: ['type' => 'integer', 'example' => 1])]
     public int $active;
 
-    public ?string $company;
+    public ?string $company = null;
 
     #[ApiProperty(openapiContext: ['type' => 'integer', 'example' => 3])]
     public int $idDefaultGroup;

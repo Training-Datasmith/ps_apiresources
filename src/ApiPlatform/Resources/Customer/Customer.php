@@ -145,7 +145,7 @@ class Customer
     public array $groupIds;
 
     #[ApiProperty(openapiContext: ['type' => 'integer', 'example' => 1])]
-    public ?int $genderId;
+    public ?int $genderId = null;
 
     #[ApiProperty(openapiContext: ['type' => 'boolean', 'example' => true])]
     public bool $enabled;
@@ -156,29 +156,29 @@ class Customer
     #[ApiProperty(openapiContext: ['type' => 'boolean', 'example' => false])]
     public bool $partnerOffersSubscribed;
 
-    public ?string $birthday;
+    public ?string $birthday = null;
 
-    public ?string $companyName;
+    public ?string $companyName = null;
 
-    public ?string $siretCode;
+    public ?string $siretCode = null;
 
-    public ?string $apeCode;
+    public ?string $apeCode = null;
 
-    public ?string $website;
+    public ?string $website = null;
 
     #[ApiProperty(openapiContext: ['type' => 'string', 'example' => '1000.50'])]
-    public ?DecimalNumber $allowedOutstandingAmount;
+    public ?DecimalNumber $allowedOutstandingAmount = null;
 
     #[ApiProperty(openapiContext: ['type' => 'integer', 'example' => 30])]
-    public ?int $maxPaymentDays;
+    public ?int $maxPaymentDays = null;
 
     #[ApiProperty(openapiContext: ['type' => 'integer', 'example' => 1])]
-    public ?int $riskId;
+    public ?int $riskId = null;
 
     #[ApiProperty(openapiContext: ['type' => 'boolean', 'example' => false])]
     public bool $guest;
 
-    public ?string $deleteMethod;
+    public ?string $deleteMethod = null;
 
     public const QUERY_MAPPING = [
         '[id]' => '[customerId]',

@@ -93,11 +93,11 @@ class Title
 
     public int $gender;
 
-    public ?File $imgFile;
+    public ?File $imgFile = null;
 
-    public ?int $width;
+    public ?int $width = null;
 
-    public ?int $height;
+    public ?int $height = null;
 
     public const QUERY_MAPPING = [
         '[localizedNames]' => '[names]',

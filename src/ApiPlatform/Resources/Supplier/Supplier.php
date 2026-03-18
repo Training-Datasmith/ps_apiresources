@@ -105,21 +105,21 @@ class Supplier
 
     public string $address;
 
-    public ?string $address2;
+    public ?string $address2 = null;
 
-    public ?string $postCode;
+    public ?string $postCode = null;
 
     public string $city;
 
-    public ?int $stateId;
+    public ?int $stateId = null;
 
     public int $countryId;
 
-    public ?string $phone;
+    public ?string $phone = null;
 
-    public ?string $mobilePhone;
+    public ?string $mobilePhone = null;
 
-    public ?string $dni;
+    public ?string $dni = null;
 
     #[Assert\NotNull(groups: ['Create'])]
     public bool $enabled;
@@ -137,7 +137,7 @@ class Supplier
     #[Assert\NotBlank(allowNull: true)]
     public array $shopIds;
 
-    public ?array $logoImage;
+    public ?array $logoImage = null;
 
     public const COMMAND_MAPPING = [
         '[descriptions]' => '[localizedDescriptions]',

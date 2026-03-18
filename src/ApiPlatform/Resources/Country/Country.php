@@ -63,7 +63,7 @@ class Country
 
     public bool $needZipCode;
 
-    public ?string $zipCodeFormat;
+    public ?string $zipCodeFormat = null;
 
     public string $addressFormat;
 

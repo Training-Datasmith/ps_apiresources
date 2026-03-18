@@ -24,7 +24,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 
 final class IframeValidationGroupsResolver
 {
-    public function __construct(private Configuration $config)
+    public function __construct(private readonly Configuration $config)
     {
     }
 

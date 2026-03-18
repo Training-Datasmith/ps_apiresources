@@ -36,9 +36,7 @@ class GenerateCombinationsSerializer implements DenormalizerInterface
     {
         $groupedAttributes = [];
         foreach ($data['groupedAttributes'] as $attributeGroup) {
-            $groupedAttributes[$attributeGroup['attributeGroupId']] = array_map(static function ($attributeId): int {
-                return (int) $attributeId;
-            }, $attributeGroup['attributeIds']);
+            $groupedAttributes[$attributeGroup['attributeGroupId']] = array_map(static fn($attributeId): int => (int) $attributeId, $attributeGroup['attributeIds']);
         }
 
         return new GenerateProductCombinationsCommand(
@@ -48,7 +46,7 @@ class GenerateCombinationsSerializer implements DenormalizerInterface
         );
     }
 
-    public function supportsDenormalization(mixed $data, string $type, ?string $format = null)
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null): bool
     {
         return $type === GenerateProductCombinationsCommand::class;
     }

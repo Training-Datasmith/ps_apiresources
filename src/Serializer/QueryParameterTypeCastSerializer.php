@@ -56,14 +56,18 @@ class QueryParameterTypeCastSerializer extends CQRSApiSerializer
 
             foreach ($constructor->getParameters() as $parameter) {
                 $paramName = $parameter->getName();
-
-                if (!array_key_exists($paramName, $data) || !is_string($data[$paramName])) {
+                if (!array_key_exists($paramName, $data)) {
+                    continue;
+                }
+                if (!is_string($data[$paramName])) {
                     continue;
                 }
 
                 $type = $parameter->getType();
-
-                if (!$type instanceof \ReflectionNamedType || !$type->isBuiltin()) {
+                if (!$type instanceof \ReflectionNamedType) {
+                    continue;
+                }
+                if (!$type->isBuiltin()) {
                     continue;
                 }
 
@@ -74,7 +78,7 @@ class QueryParameterTypeCastSerializer extends CQRSApiSerializer
                     default => $data[$paramName],
                 };
             }
-        } catch (\ReflectionException $e) {
+        } catch (\ReflectionException) {
             return $data;
         }
 
