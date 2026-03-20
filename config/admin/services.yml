@@ -3,7 +3,7 @@ services:
     public: false
     autowire: true
 
-  PrestaShop\Module\APIResources\List\ModuleQueryBuilder:
+  Presta_Shop\Module\API_Resources\List\Module_Query_Builder:
     parent: 'prestashop.core.grid.abstract_query_builder'
     autowire: true
 
@@ -17,30 +17,30 @@ services:
       - 'hook'
 
   prestashop.core.grid.data_factory.module:
-    class: PrestaShop\Module\APIResources\List\ModuleGridDataFactory
+    class: Presta_Shop\Module\API_Resources\List\Module_Grid_Data_Factory
     public: true
     arguments:
-      - '@PrestaShop\Module\APIResources\List\ModuleQueryBuilder'
+      - '@Presta_Shop\Module\API_Resources\List\Module_Query_Builder'
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.core.grid.query.doctrine_query_parser'
       - 'module'
 
-  PrestaShop\Module\APIResources\Validation\IframeValidationGroupsResolver:
+  Presta_Shop\Module\API_Resources\Validation\Iframe_Validation_Groups_Resolver:
     arguments:
       - '@prestashop.adapter.legacy.configuration'
 
-  PrestaShop\Module\APIResources\Command\GenerateApiTrackingTableCommand:
+  Presta_Shop\Module\API_Resources\Command\Generate_Api_Tracking_Table_Command:
     tags:
       - { name: 'console.command' }
 
   # Custom normalizers for commands/queries that are very specific and cannot rely on generic solutions from the core
-  PrestaShop\Module\APIResources\ApiPlatform\Normalizer\GenerateCombinationsSerializer:
+  Presta_Shop\Module\API_Resources\Api_Platform\Normalizer\Generate_Combinations_Serializer:
     autowire: true
     autoconfigure: true
     public: false
 
-  PrestaShopBundle\ApiPlatform\Serializer\CQRSApiSerializer:
-    class: PrestaShop\Module\APIResources\Serializer\QueryParameterTypeCastSerializer
+  Presta_Shop_Bundle\Api_Platform\Serializer\CQRS_Api_Serializer:
+    class: Presta_Shop\Module\API_Resources\Serializer\Query_Parameter_Type_Cast_Serializer
     decorates: 'api_platform.serializer'
     autowire: true
     arguments:
