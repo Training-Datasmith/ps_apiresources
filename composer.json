@@ -22,7 +22,7 @@
     },
     "autoload": {
         "psr-4": {
-            "PrestaShop\\Module\\APIResources\\": "src/"
+            "Presta_Shop\\Module\\API_Resources\\": "src/"
         },
         "classmap": [
             "ps_apiresources.php"
@@ -30,7 +30,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "PsApiResourcesTest\\": "tests/"
+            "Ps_Api_Resources_Test\\": "tests/"
         }
     },
     "config": {
