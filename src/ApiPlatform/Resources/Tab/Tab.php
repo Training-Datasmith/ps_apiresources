@@ -18,35 +18,18 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare (strict_types=1);
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Tab;
 
-declare(strict_types=1);
-
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Tab;
-
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\Tab\Command\UpdateTabStatusByClassNameCommand;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Tab\Command\Update_Tab_Status_By_Class_Name_Command;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Update;
 use Symfony\Component\Validator\Constraints as Assert;
-
-#[ApiResource(
-    operations: [
-        new CQRSUpdate(
-            uriTemplate: '/tabs/{className}',
-            read: false,
-            CQRSCommand: UpdateTabStatusByClassNameCommand::class,
-            scopes: ['tab_write'],
-            CQRSCommandMapping: [
-                '[enabled]' => '[status]',
-            ],
-        ),
-    ],
-    normalizationContext: ['skip_null_values' => false],
-)]
+#[Api_Resource(operations: [new Cqrs_Update(uriTemplate: '/tabs/{className}', read: false, CQRSCommand: Update_Tab_Status_By_Class_Name_Command::class, scopes: ['tab_write'], CQRSCommandMapping: ['[enabled]' => '[status]'])], normalizationContext: ['skip_null_values' => false])]
 class Tab
 {
-    #[Assert\NotBlank()]
-    public string $className;
-
-    #[Assert\NotNull()]
+    #[Assert\Not_Blank]
+    public string $class_name;
+    #[Assert\Not_Null]
     public bool $enabled;
 }

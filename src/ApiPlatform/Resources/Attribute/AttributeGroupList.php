@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,40 +19,18 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Attribute;
 
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Attribute;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShopBundle\ApiPlatform\Metadata\PaginatedList;
-
-#[ApiResource(
-    operations: [
-        new PaginatedList(
-            uriTemplate: '/attributes/groups',
-            scopes: [
-                'attribute_group_read',
-            ],
-            ApiResourceMapping: self::MAPPING,
-            gridDataFactory: 'prestashop.core.grid.data.factory.attribute_group_decorator',
-            filtersMapping: [
-                '[attributeGroupId]' => '[id_attribute_group]',
-            ],
-        ),
-    ]
-)]
-class AttributeGroupList
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Paginated_List;
+#[Api_Resource(operations: [new Paginated_List(uriTemplate: '/attributes/groups', scopes: ['attribute_group_read'], ApiResourceMapping: self::MAPPING, gridDataFactory: 'prestashop.core.grid.data.factory.attribute_group_decorator', filtersMapping: ['[attributeGroupId]' => '[id_attribute_group]'])])]
+class Attribute_Group_List
 {
-    #[ApiProperty(identifier: true)]
-    public int $attributeGroupId;
-
+    #[Api_Property(identifier: true)]
+    public int $attribute_group_id;
     public string $name;
-
     public int $values;
-
     public int $position;
-
-    public const MAPPING = [
-        '[id_attribute_group]' => '[attributeGroupId]',
-    ];
+    public const MAPPING = ['[id_attribute_group]' => '[attributeGroupId]'];
 }

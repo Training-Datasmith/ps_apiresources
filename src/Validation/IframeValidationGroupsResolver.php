@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,31 +19,25 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Api_Resources\Validation;
 
-namespace PrestaShop\Module\APIResources\Validation;
-
-use PrestaShop\PrestaShop\Adapter\Configuration;
-
-final class IframeValidationGroupsResolver
+use Presta_Shop\Presta_Shop\Adapter\Configuration;
+final class Iframe_Validation_Groups_Resolver
 {
     public function __construct(private readonly Configuration $config)
     {
     }
-
     public function create(): array
     {
-        return ['groups' => array_filter(['Default', 'Create', $this->flagGroup()])];
+        return ['groups' => array_filter(['Default', 'Create', $this->flag_group()])];
     }
-
     public function update(): array
     {
-        return ['groups' => array_filter(['Default', 'Update', $this->flagGroup()])];
+        return ['groups' => array_filter(['Default', 'Update', $this->flag_group()])];
     }
-
-    private function flagGroup(): string
+    private function flag_group(): string
     {
-        $allowIframe = (bool) ($this->config->get('PS_ALLOW_HTML_IFRAME') ?: false);
-
-        return $allowIframe ? 'AllowIframe' : 'NoIframe';
+        $allow_iframe = (bool) ($this->config->get('PS_ALLOW_HTML_IFRAME') ?: false);
+        return $allow_iframe ? 'AllowIframe' : 'NoIframe';
     }
 }

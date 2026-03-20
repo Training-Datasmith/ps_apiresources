@@ -18,54 +18,25 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare (strict_types=1);
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Product;
 
-declare(strict_types=1);
-
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Product;
-
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSGetCollection;
-use PrestaShopBundle\ApiPlatform\Metadata\LocalizedValue;
-use Symfony\Component\HttpFoundation\Response;
-
-#[ApiResource(
-    operations: [
-        new CQRSGetCollection(
-            uriTemplate: '/products/{productId}/images',
-            CQRSQuery: GetProductImages::class,
-            scopes: [
-                'product_read',
-            ],
-            CQRSQueryMapping: [
-                '[_context][shopConstraint]' => '[shopConstraint]',
-            ],
-            ApiResourceMapping: [
-                '[localizedLegends]' => '[legends]',
-            ],
-        ),
-    ],
-    exceptionToStatus: [
-        ProductNotFoundException::class => Response::HTTP_NOT_FOUND,
-    ],
-)]
-class ProductImageList
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Product\Exception\Product_Not_Found_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Product\Image\Query\Get_Product_Images;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Get_Collection;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Localized_Value;
+use Symfony\Component\Http_Foundation\Response;
+#[Api_Resource(operations: [new Cqrs_Get_Collection(uriTemplate: '/products/{productId}/images', CQRSQuery: Get_Product_Images::class, scopes: ['product_read'], CQRSQueryMapping: ['[_context][shopConstraint]' => '[shopConstraint]'], ApiResourceMapping: ['[localizedLegends]' => '[legends]'])], exceptionToStatus: [Product_Not_Found_Exception::class => Response::HTTP_NOT_FOUND])]
+class Product_Image_List
 {
-    public int $productId;
-
-    public int $imageId;
-
-    public string $imageUrl;
-
-    public string $thumbnailUrl;
-
-    #[LocalizedValue]
+    public int $product_id;
+    public int $image_id;
+    public string $image_url;
+    public string $thumbnail_url;
+    #[Localized_Value]
     public array $legends;
-
     public bool $cover;
-
     public int $position;
-
-    public array $shopIds;
+    public array $shop_ids;
 }

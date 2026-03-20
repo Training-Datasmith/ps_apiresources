@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,45 +19,24 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Discount;
 
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Discount;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\Discount\Command\BulkUpdateDiscountsStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\BulkDiscountException;
-use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\DiscountNotFoundException;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSPartialUpdate;
-use Symfony\Component\HttpFoundation\Response;
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Discount\Command\Bulk_Update_Discounts_Status_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Discount\Exception\Bulk_Discount_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Discount\Exception\Discount_Not_Found_Exception;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Partial_Update;
+use Symfony\Component\Http_Foundation\Response;
 use Symfony\Component\Validator\Constraints as Assert;
-
-#[ApiResource(
-    operations: [
-        new CQRSPartialUpdate(
-            uriTemplate: '/discounts/bulk-update-status',
-            output: false,
-            CQRSCommand: BulkUpdateDiscountsStatusCommand::class,
-            CQRSCommandMapping: [
-                '[enabled]' => '[newStatus]',
-            ],
-            scopes: [
-                'discount_write',
-            ],
-        ),
-    ],
-    exceptionToStatus: [
-        DiscountNotFoundException::class => Response::HTTP_NOT_FOUND,
-        BulkDiscountException::class => Response::HTTP_UNPROCESSABLE_ENTITY,
-    ],
-)]
-class BulkUpdateStatusDiscounts
+#[Api_Resource(operations: [new Cqrs_Partial_Update(uriTemplate: '/discounts/bulk-update-status', output: false, CQRSCommand: Bulk_Update_Discounts_Status_Command::class, CQRSCommandMapping: ['[enabled]' => '[newStatus]'], scopes: ['discount_write'])], exceptionToStatus: [Discount_Not_Found_Exception::class => Response::HTTP_NOT_FOUND, Bulk_Discount_Exception::class => Response::HTTP_UNPROCESSABLE_ENTITY])]
+class Bulk_Update_Status_Discounts
 {
     /**
      * @var int[]
      */
-    #[ApiProperty(openapiContext: ['type' => 'array', 'items' => ['type' => 'integer'], 'example' => [1, 3]])]
-    #[Assert\NotBlank]
-    public array $discountIds;
-
+    #[Api_Property(openapiContext: ['type' => 'array', 'items' => ['type' => 'integer'], 'example' => [1, 3]])]
+    #[Assert\Not_Blank]
+    public array $discount_ids;
     public bool $enabled;
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,42 +19,19 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Contact;
 
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Contact;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Search\Filters\ContactFilters;
-use PrestaShopBundle\ApiPlatform\Metadata\PaginatedList;
-
-#[ApiResource(
-    operations: [
-        new PaginatedList(
-            uriTemplate: '/contacts',
-            scopes: [
-                'contact_read',
-            ],
-            ApiResourceMapping: self::MAPPING,
-            gridDataFactory: 'prestashop.core.grid.data_provider.contacts',
-            filtersClass: ContactFilters::class,
-            filtersMapping: [
-                '[contactId]' => '[id_contact]',
-            ],
-        ),
-    ]
-)]
-class ContactList
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Search\Filters\Contact_Filters;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Paginated_List;
+#[Api_Resource(operations: [new Paginated_List(uriTemplate: '/contacts', scopes: ['contact_read'], ApiResourceMapping: self::MAPPING, gridDataFactory: 'prestashop.core.grid.data_provider.contacts', filtersClass: Contact_Filters::class, filtersMapping: ['[contactId]' => '[id_contact]'])])]
+class Contact_List
 {
-    #[ApiProperty(identifier: true)]
-    public int $contactId;
-
+    #[Api_Property(identifier: true)]
+    public int $contact_id;
     public string $name;
-
     public string $email;
-
     public string $description;
-
-    public const MAPPING = [
-        '[id_contact]' => '[contactId]',
-    ];
+    public const MAPPING = ['[id_contact]' => '[contactId]'];
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,93 +19,33 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Customer;
 
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Customer;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Parameters;
-use ApiPlatform\Metadata\QueryParameter;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSGetCollection;
-use Symfony\Component\HttpFoundation\Response;
-
-#[ApiResource(
-    operations: [
-        new CQRSGetCollection(
-            uriTemplate: '/customers/search',
-            scopes: [
-                'customer_read',
-            ],
-            CQRSQuery: SearchCustomers::class,
-            CQRSQueryMapping: self::QUERY_MAPPING,
-            ApiResourceMapping: self::API_RESOURCE_MAPPING,
-            parameters: new Parameters([
-                new QueryParameter(
-                    key: 'phrases',
-                    required: true,
-                    description: 'Array of search phrases to find customers (matches first name, last name, email, company name and id)'
-                ),
-            ]),
-            openapiContext: [
-                'parameters' => [
-                    [
-                        'name' => 'phrases',
-                        'in' => 'query',
-                        'required' => true,
-                        'schema' => [
-                            'type' => 'array',
-                            'items' => [
-                                'type' => 'string',
-                            ],
-                        ],
-                        'description' => 'Array of search phrases to find customers (matches first name, last name, email, company name and id)',
-                        'style' => 'form',
-                        'explode' => true,
-                    ],
-                ],
-            ],
-        ),
-    ],
-    exceptionToStatus: [
-        CustomerException::class => Response::HTTP_BAD_REQUEST,
-        InvalidShopConstraintException::class => Response::HTTP_BAD_REQUEST,
-    ],
-)]
-class FoundCustomer
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Api_Platform\Metadata\Parameters;
+use Api_Platform\Metadata\Query_Parameter;
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Exception\Customer_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Query\Search_Customers;
+use Presta_Shop\Presta_Shop\Core\Domain\Shop\Exception\Invalid_Shop_Constraint_Exception;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Get_Collection;
+use Symfony\Component\Http_Foundation\Response;
+#[Api_Resource(operations: [new Cqrs_Get_Collection(uriTemplate: '/customers/search', scopes: ['customer_read'], CQRSQuery: Search_Customers::class, CQRSQueryMapping: self::QUERY_MAPPING, ApiResourceMapping: self::API_RESOURCE_MAPPING, parameters: new Parameters([new Query_Parameter(key: 'phrases', required: true, description: 'Array of search phrases to find customers (matches first name, last name, email, company name and id)')]), openapiContext: ['parameters' => [['name' => 'phrases', 'in' => 'query', 'required' => true, 'schema' => ['type' => 'array', 'items' => ['type' => 'string']], 'description' => 'Array of search phrases to find customers (matches first name, last name, email, company name and id)', 'style' => 'form', 'explode' => true]]])], exceptionToStatus: [Customer_Exception::class => Response::HTTP_BAD_REQUEST, Invalid_Shop_Constraint_Exception::class => Response::HTTP_BAD_REQUEST])]
+class Found_Customer
 {
-    #[ApiProperty(identifier: true, openapiContext: ['type' => 'integer', 'example' => 1])]
-    public int $idCustomer;
-
+    #[Api_Property(identifier: true, openapiContext: ['type' => 'integer', 'example' => 1])]
+    public int $id_customer;
     public string $firstname;
-
     public string $lastname;
-
     public string $email;
-
-    public string $fullnameAndEmail;
-
-    #[ApiProperty(openapiContext: ['type' => 'integer', 'example' => 1])]
+    public string $fullname_and_email;
+    #[Api_Property(openapiContext: ['type' => 'integer', 'example' => 1])]
     public int $active;
-
     public ?string $company = null;
-
-    #[ApiProperty(openapiContext: ['type' => 'integer', 'example' => 3])]
-    public int $idDefaultGroup;
-
-    #[ApiProperty(openapiContext: ['type' => 'array', 'items' => ['type' => 'integer'], 'example' => [1, 3]])]
+    #[Api_Property(openapiContext: ['type' => 'integer', 'example' => 3])]
+    public int $id_default_group;
+    #[Api_Property(openapiContext: ['type' => 'array', 'items' => ['type' => 'integer'], 'example' => [1, 3]])]
     public array $groups;
-
-    public const QUERY_MAPPING = [
-        '[phrases]' => '[phrases]',
-        '[_context][shopConstraint]' => '[shopConstraint]',
-    ];
-
-    public const API_RESOURCE_MAPPING = [
-        '[id_customer]' => '[idCustomer]',
-        '[fullname_and_email]' => '[fullnameAndEmail]',
-        '[id_default_group]' => '[idDefaultGroup]',
-    ];
+    public const QUERY_MAPPING = ['[phrases]' => '[phrases]', '[_context][shopConstraint]' => '[shopConstraint]'];
+    public const API_RESOURCE_MAPPING = ['[id_customer]' => '[idCustomer]', '[fullname_and_email]' => '[fullnameAndEmail]', '[id_default_group]' => '[idDefaultGroup]'];
 }

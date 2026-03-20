@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,95 +19,38 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Customer;
 
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Customer;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDisableCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkEnableCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
-use Symfony\Component\HttpFoundation\Response;
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Command\Bulk_Disable_Customer_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Command\Bulk_Enable_Customer_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Exception\Customer_Constraint_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Exception\Customer_Not_Found_Exception;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Update;
+use Symfony\Component\Http_Foundation\Response;
 use Symfony\Component\Validator\Constraints as Assert;
-
-#[ApiResource(
-    operations: [
-        new CQRSUpdate(
-            uriTemplate: '/customers/bulk-disable',
-            // No output 204 code
-            output: false,
-            CQRSCommand: BulkDisableCustomerCommand::class,
-            scopes: [
-                'customer_write',
-            ],
-            openapiContext: [
-                'requestBody' => [
-                    'required' => true,
-                    'content' => [
-                        'application/json' => [
-                            'schema' => [
-                                'type' => 'object',
-                                'required' => ['customerIds'],
-                                'properties' => [
-                                    'customerIds' => [
-                                        'type' => 'array',
-                                        'items' => ['type' => 'integer'],
-                                    ],
-                                ],
-                            ],
-                            'example' => [
-                                'customerIds' => [1, 2, 3],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ),
-        new CQRSUpdate(
-            uriTemplate: '/customers/bulk-enable',
-            // No output 204 code
-            output: false,
-            CQRSCommand: BulkEnableCustomerCommand::class,
-            scopes: [
-                'customer_write',
-            ],
-            openapiContext: [
-                'requestBody' => [
-                    'required' => true,
-                    'content' => [
-                        'application/json' => [
-                            'schema' => [
-                                'type' => 'object',
-                                'required' => ['customerIds'],
-                                'properties' => [
-                                    'customerIds' => [
-                                        'type' => 'array',
-                                        'items' => ['type' => 'integer'],
-                                    ],
-                                ],
-                            ],
-                            'example' => [
-                                'customerIds' => [1, 2, 3],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ),
-    ],
-    exceptionToStatus: [
-        CustomerConstraintException::class => Response::HTTP_UNPROCESSABLE_ENTITY,
-        CustomerNotFoundException::class => Response::HTTP_NOT_FOUND,
-    ],
-)]
-class BulkCustomers
+#[Api_Resource(operations: [new Cqrs_Update(
+    uriTemplate: '/customers/bulk-disable',
+    // No output 204 code
+    output: false,
+    CQRSCommand: Bulk_Disable_Customer_Command::class,
+    scopes: ['customer_write'],
+    openapiContext: ['requestBody' => ['required' => true, 'content' => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['customerIds'], 'properties' => ['customerIds' => ['type' => 'array', 'items' => ['type' => 'integer']]]], 'example' => ['customerIds' => [1, 2, 3]]]]]]
+), new Cqrs_Update(
+    uriTemplate: '/customers/bulk-enable',
+    // No output 204 code
+    output: false,
+    CQRSCommand: Bulk_Enable_Customer_Command::class,
+    scopes: ['customer_write'],
+    openapiContext: ['requestBody' => ['required' => true, 'content' => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['customerIds'], 'properties' => ['customerIds' => ['type' => 'array', 'items' => ['type' => 'integer']]]], 'example' => ['customerIds' => [1, 2, 3]]]]]]
+)], exceptionToStatus: [Customer_Constraint_Exception::class => Response::HTTP_UNPROCESSABLE_ENTITY, Customer_Not_Found_Exception::class => Response::HTTP_NOT_FOUND])]
+class Bulk_Customers
 {
     /**
      * @var int[]
      */
-    #[ApiProperty(openapiContext: ['type' => 'array', 'items' => ['type' => 'integer'], 'example' => [1, 2, 3]])]
-    #[Assert\NotBlank()]
-    public array $customerIds;
+    #[Api_Property(openapiContext: ['type' => 'array', 'items' => ['type' => 'integer'], 'example' => [1, 2, 3]])]
+    #[Assert\Not_Blank]
+    public array $customer_ids;
 }

@@ -18,42 +18,18 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare (strict_types=1);
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Search_Alias;
 
-declare(strict_types=1);
-
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\SearchAlias;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Command\BulkDeleteSearchTermsAliasesCommand;
-use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasNotFoundException;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSDelete;
-use Symfony\Component\HttpFoundation\Response;
-
-#[ApiResource(
-    operations: [
-        new CQRSDelete(
-            uriTemplate: '/search-aliases/bulk-delete',
-            CQRSCommand: BulkDeleteSearchTermsAliasesCommand::class,
-            scopes: ['search_alias_write'],
-            CQRSCommandMapping: [
-                '[searchTerms]' => '[searchTerms]',
-            ],
-            allowEmptyBody: false,
-            experimentalOperation: true,
-        ),
-    ],
-    exceptionToStatus: [
-        AliasNotFoundException::class => Response::HTTP_NOT_FOUND,
-    ],
-)]
-class BulkDeleteSearchAliases
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Alias\Command\Bulk_Delete_Search_Terms_Aliases_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Alias\Exception\Alias_Not_Found_Exception;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Delete;
+use Symfony\Component\Http_Foundation\Response;
+#[Api_Resource(operations: [new Cqrs_Delete(uriTemplate: '/search-aliases/bulk-delete', CQRSCommand: Bulk_Delete_Search_Terms_Aliases_Command::class, scopes: ['search_alias_write'], CQRSCommandMapping: ['[searchTerms]' => '[searchTerms]'], allowEmptyBody: false, experimentalOperation: true)], exceptionToStatus: [Alias_Not_Found_Exception::class => Response::HTTP_NOT_FOUND])]
+class Bulk_Delete_Search_Aliases
 {
-    #[ApiProperty(
-        openapiContext: [
-            'type' => 'array',
-            'items' => ['type' => 'string'],
-        ]
-    )]
-    public array $searchTerms = [];
+    #[Api_Property(openapiContext: ['type' => 'array', 'items' => ['type' => 'string']])]
+    public array $search_terms = [];
 }

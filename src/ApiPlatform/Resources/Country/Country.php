@@ -18,70 +18,34 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare (strict_types=1);
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Country;
 
-declare(strict_types=1);
-
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Country;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSGet;
-use PrestaShopBundle\ApiPlatform\Metadata\LocalizedValue;
-use Symfony\Component\HttpFoundation\Response;
-
-#[ApiResource(
-    operations: [
-        new CQRSGet(
-            uriTemplate: '/countries/{countryId}',
-            requirements: ['countryId' => '\d+'],
-            CQRSQuery: GetCountryForEditing::class,
-            scopes: ['country_read'],
-            CQRSQueryMapping: self::QUERY_MAPPING,
-        ),
-    ],
-    normalizationContext: ['skip_null_values' => false],
-    exceptionToStatus: [
-        CountryNotFoundException::class => Response::HTTP_NOT_FOUND,
-    ],
-)]
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Country\Exception\Country_Not_Found_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Country\Query\Get_Country_For_Editing;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Get;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Localized_Value;
+use Symfony\Component\Http_Foundation\Response;
+#[Api_Resource(operations: [new Cqrs_Get(uriTemplate: '/countries/{countryId}', requirements: ['countryId' => '\d+'], CQRSQuery: Get_Country_For_Editing::class, scopes: ['country_read'], CQRSQueryMapping: self::QUERY_MAPPING)], normalizationContext: ['skip_null_values' => false], exceptionToStatus: [Country_Not_Found_Exception::class => Response::HTTP_NOT_FOUND])]
 class Country
 {
-    #[ApiProperty(identifier: true)]
-    public int $countryId;
-
-    #[LocalizedValue]
+    #[Api_Property(identifier: true)]
+    public int $country_id;
+    #[Localized_Value]
     public array $names;
-
-    public string $isoCode;
-
-    public int $callPrefix;
-
-    public int $defaultCurrencyId;
-
-    public int $zoneId;
-
-    public bool $needZipCode;
-
-    public ?string $zipCodeFormat = null;
-
-    public string $addressFormat;
-
+    public string $iso_code;
+    public int $call_prefix;
+    public int $default_currency_id;
+    public int $zone_id;
+    public bool $need_zip_code;
+    public ?string $zip_code_format = null;
+    public string $address_format;
     public bool $enabled;
-
-    public bool $containsStates;
-
-    public bool $needIdNumber;
-
-    public bool $displayTaxLabel;
-
-    public array $shopIds;
-
-    public const QUERY_MAPPING = [
-        '[localizedNames]' => '[names]',
-        '[defaultCurrency]' => '[defaultCurrencyId]',
-        '[zone]' => '[zoneId]',
-        '[shopAssociation]' => '[shopIds]',
-    ];
+    public bool $contains_states;
+    public bool $need_id_number;
+    public bool $display_tax_label;
+    public array $shop_ids;
+    public const QUERY_MAPPING = ['[localizedNames]' => '[names]', '[defaultCurrency]' => '[defaultCurrencyId]', '[zone]' => '[zoneId]', '[shopAssociation]' => '[shopIds]'];
 }

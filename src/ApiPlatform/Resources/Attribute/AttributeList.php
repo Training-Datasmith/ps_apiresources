@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,49 +19,21 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Attribute;
 
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Attribute;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Link;
-use PrestaShopBundle\ApiPlatform\Metadata\PaginatedList;
-
-#[ApiResource(
-    operations: [
-        new PaginatedList(
-            uriTemplate: '/attributes/groups/{attributeGroupId}/attributes',
-            scopes: [
-                'attribute_read',
-            ],
-            uriVariables: [
-                'attributeGroupId' => new Link(
-                    identifiers: ['attributeGroupId']
-                ),
-            ],
-            ApiResourceMapping: self::MAPPING,
-            gridDataFactory: 'prestashop.core.grid.data.factory.attribute_decorator',
-            filtersMapping: [
-                '[attributeId]' => '[id_attribute]',
-            ],
-        ),
-    ]
-)]
-class AttributeList
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Api_Platform\Metadata\Link;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Paginated_List;
+#[Api_Resource(operations: [new Paginated_List(uriTemplate: '/attributes/groups/{attributeGroupId}/attributes', scopes: ['attribute_read'], uriVariables: ['attributeGroupId' => new Link(identifiers: ['attributeGroupId'])], ApiResourceMapping: self::MAPPING, gridDataFactory: 'prestashop.core.grid.data.factory.attribute_decorator', filtersMapping: ['[attributeId]' => '[id_attribute]'])])]
+class Attribute_List
 {
-    #[ApiProperty(identifier: true)]
-    public int $attributeId;
-
-    #[ApiProperty(readable: false, writable: false)]
-    public int $attributeGroupId;
-
+    #[Api_Property(identifier: true)]
+    public int $attribute_id;
+    #[Api_Property(readable: false, writable: false)]
+    public int $attribute_group_id;
     public string $name;
-
     public int $values;
-
     public int $position;
-
-    public const MAPPING = [
-        '[id_attribute]' => '[attributeId]',
-    ];
+    public const MAPPING = ['[id_attribute]' => '[attributeId]'];
 }

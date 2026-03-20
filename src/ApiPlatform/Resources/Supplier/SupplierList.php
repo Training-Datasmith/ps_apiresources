@@ -18,48 +18,23 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare (strict_types=1);
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Supplier;
 
-declare(strict_types=1);
-
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Supplier;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
-use PrestaShop\PrestaShop\Core\Search\Filters\SupplierFilters;
-use PrestaShopBundle\ApiPlatform\Metadata\PaginatedList;
-use PrestaShopBundle\ApiPlatform\Provider\QueryListProvider;
-use Symfony\Component\HttpFoundation\Response;
-
-#[ApiResource(
-    operations: [
-        new PaginatedList(
-            uriTemplate: '/suppliers',
-            provider: QueryListProvider::class,
-            scopes: ['supplier_read'],
-            ApiResourceMapping: [
-                '[id_supplier]' => '[supplierId]',
-                '[active]' => '[enabled]',
-                '[products_count]' => '[productsCount]',
-            ],
-            gridDataFactory: 'prestashop.core.grid.factory.supplier_decorator',
-            filtersClass: SupplierFilters::class,
-        ),
-    ],
-    exceptionToStatus: [
-        SupplierNotFoundException::class => Response::HTTP_NOT_FOUND,
-    ],
-)]
-class SupplierList
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Supplier\Exception\Supplier_Not_Found_Exception;
+use Presta_Shop\Presta_Shop\Core\Search\Filters\Supplier_Filters;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Paginated_List;
+use Presta_Shop_Bundle\Api_Platform\Provider\Query_List_Provider;
+use Symfony\Component\Http_Foundation\Response;
+#[Api_Resource(operations: [new Paginated_List(uriTemplate: '/suppliers', provider: Query_List_Provider::class, scopes: ['supplier_read'], ApiResourceMapping: ['[id_supplier]' => '[supplierId]', '[active]' => '[enabled]', '[products_count]' => '[productsCount]'], gridDataFactory: 'prestashop.core.grid.factory.supplier_decorator', filtersClass: Supplier_Filters::class)], exceptionToStatus: [Supplier_Not_Found_Exception::class => Response::HTTP_NOT_FOUND])]
+class Supplier_List
 {
-    #[ApiProperty(identifier: true)]
-    public int $supplierId;
-
+    #[Api_Property(identifier: true)]
+    public int $supplier_id;
     public string $name;
-
     public bool $enabled;
-
-    public int $productsCount;
-
+    public int $products_count;
     public ?string $logo = null;
 }

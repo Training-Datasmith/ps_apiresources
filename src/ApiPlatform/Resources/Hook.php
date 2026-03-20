@@ -18,73 +18,28 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare (strict_types=1);
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources;
 
-declare(strict_types=1);
-
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\Hook\Command\UpdateHookStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHook;
-use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSGet;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
-use PrestaShopBundle\ApiPlatform\Metadata\PaginatedList;
-use PrestaShopBundle\ApiPlatform\Provider\QueryListProvider;
-
-#[ApiResource(
-    operations: [
-        new CQRSUpdate(
-            uriTemplate: '/hooks/{hookId}/status',
-            CQRSCommand: UpdateHookStatusCommand::class,
-            CQRSQuery: GetHook::class,
-            scopes: ['hook_write'],
-            CQRSQueryMapping: self::QUERY_MAPPING,
-            CQRSCommandMapping: self::COMMAND_MAPPING,
-        ),
-        new CQRSGet(
-            uriTemplate: '/hooks/{hookId}',
-            requirements: ['hookId' => '\d+'],
-            exceptionToStatus: [HookNotFoundException::class => 404],
-            CQRSQuery: GetHook::class,
-            scopes: ['hook_read'],
-            CQRSQueryMapping: self::QUERY_MAPPING,
-        ),
-        new CQRSGet(
-            uriTemplate: '/hooks/{hookId}/status',
-            requirements: ['hookId' => '\d+'],
-            exceptionToStatus: [HookNotFoundException::class => 404],
-            CQRSQuery: GetHookStatus::class,
-            scopes: ['hook_read'],
-            CQRSQueryMapping: self::QUERY_MAPPING,
-        ),
-        new PaginatedList(
-            uriTemplate: '/hooks',
-            provider: QueryListProvider::class,
-            scopes: ['hook_read'],
-            ApiResourceMapping: self::LIST_MAPPING,
-            gridDataFactory: 'prestashop.core.grid.data_factory.hook',
-            filtersMapping: [
-                '[hookId]' => '[id_hook]',
-            ],
-        ),
-    ],
-)]
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Hook\Command\Update_Hook_Status_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Hook\Exception\Hook_Not_Found_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Hook\Query\Get_Hook;
+use Presta_Shop\Presta_Shop\Core\Domain\Hook\Query\Get_Hook_Status;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Get;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Update;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Paginated_List;
+use Presta_Shop_Bundle\Api_Platform\Provider\Query_List_Provider;
+#[Api_Resource(operations: [new Cqrs_Update(uriTemplate: '/hooks/{hookId}/status', CQRSCommand: Update_Hook_Status_Command::class, CQRSQuery: Get_Hook::class, scopes: ['hook_write'], CQRSQueryMapping: self::QUERY_MAPPING, CQRSCommandMapping: self::COMMAND_MAPPING), new Cqrs_Get(uriTemplate: '/hooks/{hookId}', requirements: ['hookId' => '\d+'], exceptionToStatus: [Hook_Not_Found_Exception::class => 404], CQRSQuery: Get_Hook::class, scopes: ['hook_read'], CQRSQueryMapping: self::QUERY_MAPPING), new Cqrs_Get(uriTemplate: '/hooks/{hookId}/status', requirements: ['hookId' => '\d+'], exceptionToStatus: [Hook_Not_Found_Exception::class => 404], CQRSQuery: Get_Hook_Status::class, scopes: ['hook_read'], CQRSQueryMapping: self::QUERY_MAPPING), new Paginated_List(uriTemplate: '/hooks', provider: Query_List_Provider::class, scopes: ['hook_read'], ApiResourceMapping: self::LIST_MAPPING, gridDataFactory: 'prestashop.core.grid.data_factory.hook', filtersMapping: ['[hookId]' => '[id_hook]'])])]
 class Hook
 {
-    #[ApiProperty(identifier: true)]
-    public int $hookId;
-
+    #[Api_Property(identifier: true)]
+    public int $hook_id;
     public bool $enabled;
-
     public string $name;
-
     public string $title;
-
     public string $description;
-
     protected const QUERY_MAPPING = [
         // Transforms the url hookId parameter into the $id parameter for GetHook
         '[hookId]' => '[id]',
@@ -92,12 +47,7 @@ class Hook
         '[id]' => '[hookId]',
         '[active]' => '[enabled]',
     ];
-
-    protected const LIST_MAPPING = [
-        '[id_hook]' => '[hookId]',
-        '[active]' => '[enabled]',
-    ];
-
+    protected const LIST_MAPPING = ['[id_hook]' => '[hookId]', '[active]' => '[enabled]'];
     protected const COMMAND_MAPPING = [
         // Transforms the url hookId parameter into the $id parameter for UpdateHookStatusCommand
         '[hookId]' => '[id]',

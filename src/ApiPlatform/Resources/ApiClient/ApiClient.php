@@ -18,89 +18,44 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare (strict_types=1);
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Api_Client;
 
-declare(strict_types=1);
-
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\ApiClient;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\ApiClient\ApiClientSettings;
-use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\AddApiClientCommand;
-use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\DeleteApiClientCommand;
-use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\EditApiClientCommand;
-use PrestaShop\PrestaShop\Core\Domain\ApiClient\Exception\ApiClientConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\ApiClient\Exception\ApiClientNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\ApiClient\Query\GetApiClientForEditing;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSCreate;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSDelete;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSGet;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSPartialUpdate;
-use Symfony\Component\HttpFoundation\Response;
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Api_Client\Api_Client_Settings;
+use Presta_Shop\Presta_Shop\Core\Domain\Api_Client\Command\Add_Api_Client_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Api_Client\Command\Delete_Api_Client_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Api_Client\Command\Edit_Api_Client_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Api_Client\Exception\Api_Client_Constraint_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Api_Client\Exception\Api_Client_Not_Found_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Api_Client\Query\Get_Api_Client_For_Editing;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Create;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Delete;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Get;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Partial_Update;
+use Symfony\Component\Http_Foundation\Response;
 use Symfony\Component\Validator\Constraints as Assert;
-
-#[ApiResource(
-    operations: [
-        new CQRSGet(
-            uriTemplate: '/api-clients/{apiClientId}',
-            requirements: ['apiClientId' => '\d+'],
-            CQRSQuery: GetApiClientForEditing::class,
-            scopes: ['api_client_read']
-        ),
-        new CQRSDelete(
-            uriTemplate: '/api-clients/{apiClientId}',
-            requirements: ['apiClientId' => '\d+'],
-            output: false,
-            CQRSCommand: DeleteApiClientCommand::class,
-            scopes: ['api_client_write']
-        ),
-        new CQRSCreate(
-            uriTemplate: '/api-clients',
-            validationContext: ['groups' => ['Default', 'Create']],
-            CQRSCommand: AddApiClientCommand::class,
-            scopes: ['api_client_write'],
-        ),
-        new CQRSPartialUpdate(
-            uriTemplate: '/api-clients/{apiClientId}',
-            read: false,
-            CQRSCommand: EditApiClientCommand::class,
-            CQRSQuery: GetApiClientForEditing::class,
-            scopes: ['api_client_write']
-        ),
-    ],
-    normalizationContext: ['skip_null_values' => false],
-    exceptionToStatus: [
-        ApiClientNotFoundException::class => Response::HTTP_NOT_FOUND,
-        ApiClientConstraintException::class => Response::HTTP_UNPROCESSABLE_ENTITY,
-    ],
-)]
-class ApiClient
+#[Api_Resource(operations: [new Cqrs_Get(uriTemplate: '/api-clients/{apiClientId}', requirements: ['apiClientId' => '\d+'], CQRSQuery: Get_Api_Client_For_Editing::class, scopes: ['api_client_read']), new Cqrs_Delete(uriTemplate: '/api-clients/{apiClientId}', requirements: ['apiClientId' => '\d+'], output: false, CQRSCommand: Delete_Api_Client_Command::class, scopes: ['api_client_write']), new Cqrs_Create(uriTemplate: '/api-clients', validationContext: ['groups' => ['Default', 'Create']], CQRSCommand: Add_Api_Client_Command::class, scopes: ['api_client_write']), new Cqrs_Partial_Update(uriTemplate: '/api-clients/{apiClientId}', read: false, CQRSCommand: Edit_Api_Client_Command::class, CQRSQuery: Get_Api_Client_For_Editing::class, scopes: ['api_client_write'])], normalizationContext: ['skip_null_values' => false], exceptionToStatus: [Api_Client_Not_Found_Exception::class => Response::HTTP_NOT_FOUND, Api_Client_Constraint_Exception::class => Response::HTTP_UNPROCESSABLE_ENTITY])]
+class Api_Client
 {
-    #[ApiProperty(identifier: true)]
-    public int $apiClientId;
-
-    #[Assert\NotBlank(groups: ['Create'])]
-    #[Assert\Length(min: 1, max: ApiClientSettings::MAX_CLIENT_ID_LENGTH)]
-    public string $clientId;
-
-    #[Assert\NotBlank(groups: ['Create'])]
-    #[Assert\Length(min: 1, max: ApiClientSettings::MAX_CLIENT_NAME_LENGTH)]
-    public string $clientName;
-
-    #[Assert\Length(max: ApiClientSettings::MAX_DESCRIPTION_LENGTH)]
+    #[Api_Property(identifier: true)]
+    public int $api_client_id;
+    #[Assert\Not_Blank(groups: ['Create'])]
+    #[Assert\Length(min: 1, max: Api_Client_Settings::MAX_CLIENT_ID_LENGTH)]
+    public string $client_id;
+    #[Assert\Not_Blank(groups: ['Create'])]
+    #[Assert\Length(min: 1, max: Api_Client_Settings::MAX_CLIENT_NAME_LENGTH)]
+    public string $client_name;
+    #[Assert\Length(max: Api_Client_Settings::MAX_DESCRIPTION_LENGTH)]
     public string $description;
-
-    public ?string $externalIssuer = null;
-
-    #[Assert\NotNull(groups: ['Create'])]
+    public ?string $external_issuer = null;
+    #[Assert\Not_Null(groups: ['Create'])]
     public bool $enabled;
-
-    #[Assert\NotBlank(groups: ['Create'])]
+    #[Assert\Not_Blank(groups: ['Create'])]
     #[Assert\Positive]
     public int $lifetime;
-
     public array $scopes;
-
     /**
      * Only used for the return of created API Client, it is the only endpoint where the secret is returned.
      */

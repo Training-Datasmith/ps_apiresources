@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,34 +19,26 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Tax;
 
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Tax;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkDeleteTaxCommand;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Tax\Command\Bulk_Delete_Tax_Command;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Update;
 use Symfony\Component\Validator\Constraints as Assert;
-
-#[ApiResource(
-    operations: [
-        new CQRSUpdate(
-            uriTemplate: '/taxes/bulk-delete',
-            // No output 204 code
-            output: false,
-            CQRSCommand: BulkDeleteTaxCommand::class,
-            scopes: [
-                'tax_write',
-            ],
-        ),
-    ],
-)]
-class BulkTaxDelete
+#[Api_Resource(operations: [new Cqrs_Update(
+    uriTemplate: '/taxes/bulk-delete',
+    // No output 204 code
+    output: false,
+    CQRSCommand: Bulk_Delete_Tax_Command::class,
+    scopes: ['tax_write']
+)])]
+class Bulk_Tax_Delete
 {
     /**
      * @var int[]
      */
-    #[ApiProperty(openapiContext: ['type' => 'array', 'items' => ['type' => 'integer'], 'example' => [1, 3]])]
-    #[Assert\NotBlank]
-    public array $taxIds;
+    #[Api_Property(openapiContext: ['type' => 'array', 'items' => ['type' => 'integer'], 'example' => [1, 3]])]
+    #[Assert\Not_Blank]
+    public array $tax_ids;
 }

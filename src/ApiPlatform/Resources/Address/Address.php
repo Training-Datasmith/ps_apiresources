@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,35 +19,18 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Address;
 
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Address;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSDelete;
-use Symfony\Component\HttpFoundation\Response;
-
-#[ApiResource(
-    operations: [
-        new CQRSDelete(
-            uriTemplate: '/addresses/{addressId}',
-            requirements: ['addressId' => '\d+'],
-            CQRSCommand: DeleteAddressCommand::class,
-            scopes: [
-                'address_write',
-            ],
-        ),
-    ],
-    exceptionToStatus: [
-        AddressConstraintException::class => Response::HTTP_UNPROCESSABLE_ENTITY,
-        AddressNotFoundException::class => Response::HTTP_NOT_FOUND,
-    ],
-)]
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Address\Command\Delete_Address_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Address\Exception\Address_Constraint_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Address\Exception\Address_Not_Found_Exception;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Delete;
+use Symfony\Component\Http_Foundation\Response;
+#[Api_Resource(operations: [new Cqrs_Delete(uriTemplate: '/addresses/{addressId}', requirements: ['addressId' => '\d+'], CQRSCommand: Delete_Address_Command::class, scopes: ['address_write'])], exceptionToStatus: [Address_Constraint_Exception::class => Response::HTTP_UNPROCESSABLE_ENTITY, Address_Not_Found_Exception::class => Response::HTTP_NOT_FOUND])]
 class Address
 {
-    #[ApiProperty(identifier: true)]
-    public int $addressId;
+    #[Api_Property(identifier: true)]
+    public int $address_id;
 }

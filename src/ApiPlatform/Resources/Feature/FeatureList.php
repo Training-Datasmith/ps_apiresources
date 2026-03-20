@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,45 +19,19 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Feature;
 
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Feature;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Search\Filters\FeatureFilters;
-use PrestaShopBundle\ApiPlatform\Metadata\PaginatedList;
-
-#[ApiResource(
-    operations: [
-        new PaginatedList(
-            uriTemplate: '/features',
-            scopes: [
-                'feature_read',
-            ],
-            ApiResourceMapping: self::MAPPING,
-            gridDataFactory: 'prestashop.core.grid.data.factory.feature',
-            filtersClass: FeatureFilters::class,
-            filtersMapping: [
-                '[featureId]' => '[id_feature]',
-            ],
-        ),
-    ]
-)]
-class FeatureList
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Search\Filters\Feature_Filters;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Paginated_List;
+#[Api_Resource(operations: [new Paginated_List(uriTemplate: '/features', scopes: ['feature_read'], ApiResourceMapping: self::MAPPING, gridDataFactory: 'prestashop.core.grid.data.factory.feature', filtersClass: Feature_Filters::class, filtersMapping: ['[featureId]' => '[id_feature]'])])]
+class Feature_List
 {
-    #[ApiProperty(identifier: true)]
-    public int $featureId;
-
+    #[Api_Property(identifier: true)]
+    public int $feature_id;
     public string $name;
-
     public int $values;
-
     public int $position;
-
-    public const MAPPING = [
-        '[id_feature]' => '[featureId]',
-        '[name]' => '[name]',
-        '[values]' => '[values]',
-        '[position]' => '[position]',
-    ];
+    public const MAPPING = ['[id_feature]' => '[featureId]', '[name]' => '[name]', '[values]' => '[values]', '[position]' => '[position]'];
 }

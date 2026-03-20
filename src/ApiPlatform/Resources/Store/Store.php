@@ -18,66 +18,27 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare (strict_types=1);
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Store;
 
-declare(strict_types=1);
-
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Store;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\Store\Command\DeleteStoreCommand;
-use PrestaShop\PrestaShop\Core\Domain\Store\Command\ToggleStoreStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSDelete;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSGet;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
-use Symfony\Component\HttpFoundation\Response;
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Store\Command\Delete_Store_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Store\Command\Toggle_Store_Status_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Store\Exception\Store_Not_Found_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Store\Query\Get_Store_For_Editing;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Delete;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Get;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Update;
+use Symfony\Component\Http_Foundation\Response;
 use Symfony\Component\Validator\Constraints as Assert;
-
-#[ApiResource(
-    operations: [
-        new CQRSDelete(
-            uriTemplate: '/stores/{storeId}',
-            requirements: ['storeId' => '\d+'],
-            output: false,
-            CQRSCommand: DeleteStoreCommand::class,
-            scopes: ['store_write']
-        ),
-        new CQRSGet(
-            uriTemplate: '/stores/{storeId}',
-            requirements: ['storeId' => '\d+'],
-            CQRSQuery: GetStoreForEditing::class,
-            scopes: ['store_read'],
-            CQRSQueryMapping: self::QUERY_MAPPING,
-        ),
-        new CQRSUpdate(
-            uriTemplate: '/stores/{storeId}/toggle-status',
-            requirements: ['storeId' => '\d+'],
-            output: false,
-            allowEmptyBody: true,
-            CQRSCommand: ToggleStoreStatusCommand::class,
-            scopes: ['store_write'],
-        ),
-    ],
-    normalizationContext: ['skip_null_values' => false],
-    exceptionToStatus: [
-        StoreNotFoundException::class => Response::HTTP_NOT_FOUND,
-    ],
-)]
+#[Api_Resource(operations: [new Cqrs_Delete(uriTemplate: '/stores/{storeId}', requirements: ['storeId' => '\d+'], output: false, CQRSCommand: Delete_Store_Command::class, scopes: ['store_write']), new Cqrs_Get(uriTemplate: '/stores/{storeId}', requirements: ['storeId' => '\d+'], CQRSQuery: Get_Store_For_Editing::class, scopes: ['store_read'], CQRSQueryMapping: self::QUERY_MAPPING), new Cqrs_Update(uriTemplate: '/stores/{storeId}/toggle-status', requirements: ['storeId' => '\d+'], output: false, allowEmptyBody: true, CQRSCommand: Toggle_Store_Status_Command::class, scopes: ['store_write'])], normalizationContext: ['skip_null_values' => false], exceptionToStatus: [Store_Not_Found_Exception::class => Response::HTTP_NOT_FOUND])]
 class Store
 {
-    #[ApiProperty(identifier: true)]
-    public int $storeId;
-
-    #[Assert\NotNull(groups: ['Create'])]
+    #[Api_Property(identifier: true)]
+    public int $store_id;
+    #[Assert\Not_Null(groups: ['Create'])]
     public bool $enabled;
-
-    public const COMMAND_MAPPING = [
-        '[enabled]' => '[active]',
-    ];
-
-    public const QUERY_MAPPING = [
-        '[active]' => '[enabled]',
-    ];
+    public const COMMAND_MAPPING = ['[enabled]' => '[active]'];
+    public const QUERY_MAPPING = ['[active]' => '[enabled]'];
 }

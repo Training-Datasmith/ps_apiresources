@@ -18,49 +18,21 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare (strict_types=1);
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Module;
 
-declare(strict_types=1);
-
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Module;
-
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkUninstallModuleCommand;
-use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
-
-#[ApiResource(
-    operations: [
-        new CQRSUpdate(
-            uriTemplate: '/modules/bulk-update-status',
-            output: false,
-            CQRSCommand: BulkToggleModuleStatusCommand::class,
-            scopes: [
-                'module_write',
-            ],
-            CQRSCommandMapping: [
-                '[enabled]' => '[expectedStatus]',
-            ],
-        ),
-        new CQRSUpdate(
-            uriTemplate: '/modules/bulk-uninstall',
-            output: false,
-            CQRSCommand: BulkUninstallModuleCommand::class,
-            scopes: [
-                'module_write',
-            ],
-        ),
-    ],
-    exceptionToStatus: [ModuleNotFoundException::class => 404],
-)]
-class BulkModules
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Module\Command\Bulk_Toggle_Module_Status_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Module\Command\Bulk_Uninstall_Module_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Module\Exception\Module_Not_Found_Exception;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Update;
+#[Api_Resource(operations: [new Cqrs_Update(uriTemplate: '/modules/bulk-update-status', output: false, CQRSCommand: Bulk_Toggle_Module_Status_Command::class, scopes: ['module_write'], CQRSCommandMapping: ['[enabled]' => '[expectedStatus]']), new Cqrs_Update(uriTemplate: '/modules/bulk-uninstall', output: false, CQRSCommand: Bulk_Uninstall_Module_Command::class, scopes: ['module_write'])], exceptionToStatus: [Module_Not_Found_Exception::class => 404])]
+class Bulk_Modules
 {
     /**
      * @var string[]
      */
     public array $modules;
-
     public bool $enabled;
-
-    public bool $deleteFiles;
+    public bool $delete_files;
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,43 +19,34 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Api_Resources\List;
 
-namespace PrestaShop\Module\APIResources\List;
-
-use PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory;
-use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
-use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
-use PrestaShop\PrestaShop\Core\Grid\Query\QueryParserInterface;
-use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
-use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
-
+use Presta_Shop\Presta_Shop\Core\Grid\Data\Factory\Doctrine_Grid_Data_Factory;
+use Presta_Shop\Presta_Shop\Core\Grid\Data\Grid_Data;
+use Presta_Shop\Presta_Shop\Core\Grid\Query\Doctrine_Query_Builder_Interface;
+use Presta_Shop\Presta_Shop\Core\Grid\Query\Query_Parser_Interface;
+use Presta_Shop\Presta_Shop\Core\Grid\Record\Record_Collection;
+use Presta_Shop\Presta_Shop\Core\Grid\Search\Search_Criteria_Interface;
+use Presta_Shop\Presta_Shop\Core\Hook\Hook_Dispatcher_Interface;
+use Presta_Shop\Presta_Shop\Core\Module\Module_Repository;
 /**
  * Custom factory to enrich the data received from database.
  */
-class ModuleGridDataFactory extends DoctrineGridDataFactory
+class Module_Grid_Data_Factory extends Doctrine_Grid_Data_Factory
 {
-    public function __construct(
-        DoctrineQueryBuilderInterface $gridQueryBuilder,
-        HookDispatcherInterface $hookDispatcher,
-        QueryParserInterface $queryParser,
-        string $gridId,
-        protected ModuleRepository $moduleRepository,
-    ) {
-        parent::__construct($gridQueryBuilder, $hookDispatcher, $queryParser, $gridId);
-    }
-
-    public function getData(SearchCriteriaInterface $searchCriteria)
+    public function __construct(Doctrine_Query_Builder_Interface $grid_query_builder, Hook_Dispatcher_Interface $hook_dispatcher, Query_Parser_Interface $query_parser, string $grid_id, protected Module_Repository $module_repository)
     {
-        $gridData = parent::getData($searchCriteria);
-        $newModules = [];
-        foreach ($gridData->getRecords() as $moduleRecord) {
-            $module = $this->moduleRepository->getModule($moduleRecord['technicalName']);
-            $moduleRecord['moduleVersion'] = $module->disk->get('version');
-            $newModules[] = $moduleRecord;
+        parent::__construct($grid_query_builder, $hook_dispatcher, $query_parser, $grid_id);
+    }
+    public function get_data(Search_Criteria_Interface $search_criteria)
+    {
+        $grid_data = parent::get_data($search_criteria);
+        $new_modules = [];
+        foreach ($grid_data->get_records() as $module_record) {
+            $module = $this->module_repository->get_module($module_record['technicalName']);
+            $module_record['moduleVersion'] = $module->disk->get('version');
+            $new_modules[] = $module_record;
         }
-
-        return new GridData(new RecordCollection($newModules), $gridData->getRecordsTotal(), $gridData->getQuery());
+        return new Grid_Data(new Record_Collection($new_modules), $grid_data->get_records_total(), $grid_data->get_query());
     }
 }

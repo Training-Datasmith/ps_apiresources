@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,30 +19,15 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Attribute;
 
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Attribute;
-
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShopBundle\ApiPlatform\Metadata\PositionCollection;
-use PrestaShopBundle\ApiPlatform\Metadata\UpdatePosition;
-
-#[ApiResource(
-    operations: [
-        new UpdatePosition(
-            uriTemplate: '/attributes/groups/{attributeGroupId}/attributes/positions',
-            requirements: ['attributeGroupId' => '\d+'],
-            scopes: [
-                'attribute_write',
-            ],
-            positionDefinition: 'prestashop.core.grid.attribute.position_definition',
-            parentIdField: 'attributeGroupId',
-        ),
-    ],
-)]
-class AttributePosition
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Position_Collection;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Update_Position;
+#[Api_Resource(operations: [new Update_Position(uriTemplate: '/attributes/groups/{attributeGroupId}/attributes/positions', requirements: ['attributeGroupId' => '\d+'], scopes: ['attribute_write'], positionDefinition: 'prestashop.core.grid.attribute.position_definition', parentIdField: 'attributeGroupId')])]
+class Attribute_Position
 {
-    public int $attributeGroupId;
-
-    #[PositionCollection(rowIdField: 'attributeId')]
+    public int $attribute_group_id;
+    #[Position_Collection(rowIdField: 'attributeId')]
     public array $positions;
 }

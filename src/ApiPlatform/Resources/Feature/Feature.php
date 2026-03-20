@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,101 +19,39 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Feature;
 
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Feature;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureCommand;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureCommand;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSCreate;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSDelete;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSGet;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSPartialUpdate;
-use PrestaShopBundle\ApiPlatform\Metadata\LocalizedValue;
-use Symfony\Component\HttpFoundation\Response;
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Constraint_Validator\Constraints\Default_Language;
+use Presta_Shop\Presta_Shop\Core\Constraint_Validator\Constraints\Typed_Regex;
+use Presta_Shop\Presta_Shop\Core\Domain\Feature\Command\Add_Feature_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Feature\Command\Delete_Feature_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Feature\Command\Edit_Feature_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Feature\Exception\Feature_Constraint_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Feature\Exception\Feature_Not_Found_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Feature\Query\Get_Feature_For_Editing;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Create;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Delete;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Get;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Partial_Update;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Localized_Value;
+use Symfony\Component\Http_Foundation\Response;
 use Symfony\Component\Validator\Constraints as Assert;
-
-#[ApiResource(
-    operations: [
-        new CQRSGet(
-            uriTemplate: '/features/{featureId}',
-            CQRSQuery: GetFeatureForEditing::class,
-            scopes: [
-                'feature_read',
-            ],
-            CQRSQueryMapping: self::QUERY_MAPPING,
-        ),
-        new CQRSCreate(
-            uriTemplate: '/features',
-            validationContext: ['groups' => ['Default', 'Create']],
-            CQRSCommand: AddFeatureCommand::class,
-            CQRSQuery: GetFeatureForEditing::class,
-            scopes: [
-                'feature_write',
-            ],
-            CQRSQueryMapping: self::QUERY_MAPPING,
-            CQRSCommandMapping: self::COMMAND_MAPPING,
-        ),
-        new CQRSPartialUpdate(
-            uriTemplate: '/features/{featureId}',
-            validationContext: ['groups' => ['Default', 'Update']],
-            CQRSCommand: EditFeatureCommand::class,
-            CQRSQuery: GetFeatureForEditing::class,
-            scopes: [
-                'feature_write',
-            ],
-            CQRSQueryMapping: self::QUERY_MAPPING,
-            CQRSCommandMapping: self::COMMAND_MAPPING,
-        ),
-        new CQRSDelete(
-            uriTemplate: '/features/{featureId}',
-            requirements: ['featureId' => '\d+'],
-            CQRSCommand: DeleteFeatureCommand::class,
-            scopes: [
-                'feature_write',
-            ],
-        ),
-    ],
-    exceptionToStatus: [
-        FeatureConstraintException::class => Response::HTTP_UNPROCESSABLE_ENTITY,
-        FeatureNotFoundException::class => Response::HTTP_NOT_FOUND,
-    ],
-)]
+#[Api_Resource(operations: [new Cqrs_Get(uriTemplate: '/features/{featureId}', CQRSQuery: Get_Feature_For_Editing::class, scopes: ['feature_read'], CQRSQueryMapping: self::QUERY_MAPPING), new Cqrs_Create(uriTemplate: '/features', validationContext: ['groups' => ['Default', 'Create']], CQRSCommand: Add_Feature_Command::class, CQRSQuery: Get_Feature_For_Editing::class, scopes: ['feature_write'], CQRSQueryMapping: self::QUERY_MAPPING, CQRSCommandMapping: self::COMMAND_MAPPING), new Cqrs_Partial_Update(uriTemplate: '/features/{featureId}', validationContext: ['groups' => ['Default', 'Update']], CQRSCommand: Edit_Feature_Command::class, CQRSQuery: Get_Feature_For_Editing::class, scopes: ['feature_write'], CQRSQueryMapping: self::QUERY_MAPPING, CQRSCommandMapping: self::COMMAND_MAPPING), new Cqrs_Delete(uriTemplate: '/features/{featureId}', requirements: ['featureId' => '\d+'], CQRSCommand: Delete_Feature_Command::class, scopes: ['feature_write'])], exceptionToStatus: [Feature_Constraint_Exception::class => Response::HTTP_UNPROCESSABLE_ENTITY, Feature_Not_Found_Exception::class => Response::HTTP_NOT_FOUND])]
 class Feature
 {
-    #[ApiProperty(identifier: true)]
-    public int $featureId;
-
-    #[LocalizedValue]
-    #[DefaultLanguage(groups: ['Create'], fieldName: 'names')]
-    #[DefaultLanguage(groups: ['Update'], fieldName: 'names', allowNull: true)]
-    #[Assert\All(constraints: [
-        new TypedRegex([
-            'type' => TypedRegex::TYPE_CATALOG_NAME,
-        ]),
-    ])]
+    #[Api_Property(identifier: true)]
+    public int $feature_id;
+    #[Localized_Value]
+    #[Default_Language(groups: ['Create'], fieldName: 'names')]
+    #[Default_Language(groups: ['Update'], fieldName: 'names', allowNull: true)]
+    #[Assert\All(constraints: [new Typed_Regex(['type' => Typed_Regex::TYPE_CATALOG_NAME])])]
     public array $names;
-
-    #[ApiProperty(openapiContext: ['type' => 'array', 'items' => ['type' => 'integer'], 'example' => [1, 3]])]
-    #[Assert\NotBlank(allowNull: true)]
-    public array $shopIds;
-
+    #[Api_Property(openapiContext: ['type' => 'array', 'items' => ['type' => 'integer'], 'example' => [1, 3]])]
+    #[Assert\Not_Blank(allowNull: true)]
+    public array $shop_ids;
     public int $position;
-
-    public const QUERY_MAPPING = [
-        '[name]' => '[names]',
-        '[shopAssociation]' => '[shopIds]',
-    ];
-
-    public const COMMAND_MAPPING = [
-        '[names]' => '[localizedNames]',
-        '[shopIds]' => '[shopAssociation]',
-    ];
+    public const QUERY_MAPPING = ['[name]' => '[names]', '[shopAssociation]' => '[shopIds]'];
+    public const COMMAND_MAPPING = ['[names]' => '[localizedNames]', '[shopIds]' => '[shopAssociation]'];
 }

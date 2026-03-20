@@ -18,65 +18,29 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare (strict_types=1);
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Product;
 
-declare(strict_types=1);
-
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Product;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory\ProductGridDataFactoryDecorator;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
-use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
-use PrestaShopBundle\ApiPlatform\Metadata\PaginatedList;
-use PrestaShopBundle\ApiPlatform\Provider\QueryListProvider;
-use Symfony\Component\HttpFoundation\Response;
-
-#[ApiResource(
-    operations: [
-        new PaginatedList(
-            uriTemplate: '/products',
-            provider: QueryListProvider::class,
-            scopes: ['product_read'],
-            ApiResourceMapping: [
-                '[id_product]' => '[productId]',
-                '[price_tax_excluded_decimal_value]' => '[priceTaxExcluded]',
-                '[price_tax_included_decimal_value]' => '[priceTaxIncluded]',
-                '[active]' => '[enabled]',
-            ],
-            gridDataFactory: ProductGridDataFactoryDecorator::class,
-            filtersClass: ProductFilters::class,
-            filtersMapping: [
-                '[productId]' => '[id_product]',
-                '[priceTaxExcluded]' => '[final_price_tax_excluded]',
-                '[priceTaxIncluded]' => '[final_price_tax_included]',
-                '[enabled]' => '[active]',
-            ],
-        ),
-    ],
-    exceptionToStatus: [
-        ProductNotFoundException::class => Response::HTTP_NOT_FOUND,
-        ShopAssociationNotFound::class => Response::HTTP_NOT_FOUND,
-    ],
-)]
-class ProductList
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Decimal\Decimal_Number;
+use Presta_Shop\Presta_Shop\Adapter\Product\Grid\Data\Factory\Product_Grid_Data_Factory_Decorator;
+use Presta_Shop\Presta_Shop\Core\Domain\Product\Exception\Product_Not_Found_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Shop\Exception\Shop_Association_Not_Found;
+use Presta_Shop\Presta_Shop\Core\Search\Filters\Product_Filters;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Paginated_List;
+use Presta_Shop_Bundle\Api_Platform\Provider\Query_List_Provider;
+use Symfony\Component\Http_Foundation\Response;
+#[Api_Resource(operations: [new Paginated_List(uriTemplate: '/products', provider: Query_List_Provider::class, scopes: ['product_read'], ApiResourceMapping: ['[id_product]' => '[productId]', '[price_tax_excluded_decimal_value]' => '[priceTaxExcluded]', '[price_tax_included_decimal_value]' => '[priceTaxIncluded]', '[active]' => '[enabled]'], gridDataFactory: Product_Grid_Data_Factory_Decorator::class, filtersClass: Product_Filters::class, filtersMapping: ['[productId]' => '[id_product]', '[priceTaxExcluded]' => '[final_price_tax_excluded]', '[priceTaxIncluded]' => '[final_price_tax_included]', '[enabled]' => '[active]'])], exceptionToStatus: [Product_Not_Found_Exception::class => Response::HTTP_NOT_FOUND, Shop_Association_Not_Found::class => Response::HTTP_NOT_FOUND])]
+class Product_List
 {
-    #[ApiProperty(identifier: true)]
-    public int $productId;
-
+    #[Api_Property(identifier: true)]
+    public int $product_id;
     public string $type;
-
     public bool $enabled;
-
     public string $name;
-
     public int $quantity;
-
-    public DecimalNumber $priceTaxExcluded;
-
-    public DecimalNumber $priceTaxIncluded;
-
+    public Decimal_Number $price_tax_excluded;
+    public Decimal_Number $price_tax_included;
     public string $category;
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,47 +19,23 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Discount;
 
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Discount;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\Discount\Query\GetDiscountTypes;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSGetCollection;
-use PrestaShopBundle\ApiPlatform\Metadata\LocalizedValue;
-
-#[ApiResource(
-    operations: [
-        new CQRSGetCollection(
-            uriTemplate: '/discounts/types',
-            CQRSQuery: GetDiscountTypes::class,
-            scopes: ['discount_read'],
-            CQRSQueryMapping: [],
-            ApiResourceMapping: [
-                '[type]' => '[type]',
-                '[localizedNames]' => '[names]',
-                '[localizedDescriptions]' => '[descriptions]',
-                '[core]' => '[core]',
-                '[enabled]' => '[enabled]',
-            ],
-        ),
-    ],
-    normalizationContext: ['skip_null_values' => false],
-)]
-class DiscountTypeList
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Discount\Query\Get_Discount_Types;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Get_Collection;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Localized_Value;
+#[Api_Resource(operations: [new Cqrs_Get_Collection(uriTemplate: '/discounts/types', CQRSQuery: Get_Discount_Types::class, scopes: ['discount_read'], CQRSQueryMapping: [], ApiResourceMapping: ['[type]' => '[type]', '[localizedNames]' => '[names]', '[localizedDescriptions]' => '[descriptions]', '[core]' => '[core]', '[enabled]' => '[enabled]'])], normalizationContext: ['skip_null_values' => false])]
+class Discount_Type_List
 {
-    #[ApiProperty(identifier: true)]
-    public int $discountTypeId;
-
+    #[Api_Property(identifier: true)]
+    public int $discount_type_id;
     public string $type;
-
-    #[LocalizedValue]
+    #[Localized_Value]
     public array $names;
-
-    #[LocalizedValue]
+    #[Localized_Value]
     public array $descriptions;
-
     public bool $core;
-
     public bool $enabled;
 }

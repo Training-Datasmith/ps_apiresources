@@ -18,117 +18,29 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare (strict_types=1);
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Product;
 
-declare(strict_types=1);
-
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Product;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Parameters;
-use ApiPlatform\Metadata\QueryParameter;
-use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSGetCollection;
-
-#[ApiResource(
-    operations: [
-        new CQRSGetCollection(
-            uriTemplate: '/products/search',
-            scopes: [
-                'product_read',
-            ],
-            CQRSQuery: SearchProducts::class,
-            parameters: new Parameters([
-                new QueryParameter(
-                    key: 'phrase',
-                    required: true,
-                    description: 'Search phrase to find products'
-                ),
-                new QueryParameter(
-                    key: 'resultsLimit',
-                    schema: ['type' => 'integer', 'default' => '20'],
-                    required: true,
-                    description: 'Maximum number of results to return'
-                ),
-                new QueryParameter(
-                    key: 'isoCode',
-                    required: true,
-                    description: 'Currency ISO code (e.g., EUR, USD)'
-                ),
-                new QueryParameter(
-                    key: 'orderId',
-                    schema: ['type' => 'integer'],
-                    required: false,
-                    description: 'Optional order ID for context-specific pricing'
-                ),
-            ]),
-            openapiContext: [
-                'parameters' => [
-                    [
-                        'name' => 'phrase',
-                        'in' => 'query',
-                        'required' => true,
-                        'schema' => [
-                            'type' => 'string',
-                        ],
-                        'description' => 'Search phrase to find products',
-                    ],
-                    [
-                        'name' => 'resultsLimit',
-                        'in' => 'query',
-                        'required' => true,
-                        'schema' => [
-                            'type' => 'integer',
-                            'default' => 20,
-                        ],
-                        'description' => 'Maximum number of results to return',
-                    ],
-                    [
-                        'name' => 'isoCode',
-                        'in' => 'query',
-                        'required' => true,
-                        'schema' => [
-                            'type' => 'string',
-                        ],
-                        'description' => 'Currency ISO code (e.g., EUR, USD)',
-                    ],
-                    [
-                        'name' => 'orderId',
-                        'in' => 'query',
-                        'required' => false,
-                        'schema' => [
-                            'type' => 'integer',
-                        ],
-                        'description' => 'Optional order ID for context-specific pricing',
-                    ],
-                ],
-            ]
-        ),
-    ],
-)]
-class FoundProduct
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Api_Platform\Metadata\Parameters;
+use Api_Platform\Metadata\Query_Parameter;
+use Presta_Shop\Decimal\Decimal_Number;
+use Presta_Shop\Presta_Shop\Core\Domain\Product\Query\Search_Products;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Get_Collection;
+#[Api_Resource(operations: [new Cqrs_Get_Collection(uriTemplate: '/products/search', scopes: ['product_read'], CQRSQuery: Search_Products::class, parameters: new Parameters([new Query_Parameter(key: 'phrase', required: true, description: 'Search phrase to find products'), new Query_Parameter(key: 'resultsLimit', schema: ['type' => 'integer', 'default' => '20'], required: true, description: 'Maximum number of results to return'), new Query_Parameter(key: 'isoCode', required: true, description: 'Currency ISO code (e.g., EUR, USD)'), new Query_Parameter(key: 'orderId', schema: ['type' => 'integer'], required: false, description: 'Optional order ID for context-specific pricing')]), openapiContext: ['parameters' => [['name' => 'phrase', 'in' => 'query', 'required' => true, 'schema' => ['type' => 'string'], 'description' => 'Search phrase to find products'], ['name' => 'resultsLimit', 'in' => 'query', 'required' => true, 'schema' => ['type' => 'integer', 'default' => 20], 'description' => 'Maximum number of results to return'], ['name' => 'isoCode', 'in' => 'query', 'required' => true, 'schema' => ['type' => 'string'], 'description' => 'Currency ISO code (e.g., EUR, USD)'], ['name' => 'orderId', 'in' => 'query', 'required' => false, 'schema' => ['type' => 'integer'], 'description' => 'Optional order ID for context-specific pricing']]])])]
+class Found_Product
 {
-    #[ApiProperty(identifier: true)]
-    public int $productId;
-
-    public bool $availableOutOfStock;
-
+    #[Api_Property(identifier: true)]
+    public int $product_id;
+    public bool $available_out_of_stock;
     public string $name;
-
-    public DecimalNumber $taxRate;
-
-    public string $formattedPrice;
-
-    public DecimalNumber $priceTaxIncl;
-
-    public DecimalNumber $priceTaxExcl;
-
+    public Decimal_Number $tax_rate;
+    public string $formatted_price;
+    public Decimal_Number $price_tax_incl;
+    public Decimal_Number $price_tax_excl;
     public int $stock;
-
     public string $location;
-
     public array $combinations;
-
-    public array $customizationFields;
+    public array $customization_fields;
 }

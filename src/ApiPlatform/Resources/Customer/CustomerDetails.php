@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,60 +19,29 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Customer;
 
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Customer;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSGet;
-use Symfony\Component\HttpFoundation\Response;
-
-#[ApiResource(
-    operations: [
-        new CQRSGet(
-            uriTemplate: '/customers/{customerId}/details',
-            requirements: ['customerId' => '\d+'],
-            CQRSQuery: GetCustomerForViewing::class,
-            scopes: [
-                'customer_read',
-            ],
-            CQRSQueryMapping: self::QUERY_MAPPING,
-        ),
-    ],
-    exceptionToStatus: [
-        CustomerNotFoundException::class => Response::HTTP_NOT_FOUND,
-    ],
-)]
-class CustomerDetails
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Exception\Customer_Not_Found_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Query\Get_Customer_For_Viewing;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Get;
+use Symfony\Component\Http_Foundation\Response;
+#[Api_Resource(operations: [new Cqrs_Get(uriTemplate: '/customers/{customerId}/details', requirements: ['customerId' => '\d+'], CQRSQuery: Get_Customer_For_Viewing::class, scopes: ['customer_read'], CQRSQueryMapping: self::QUERY_MAPPING)], exceptionToStatus: [Customer_Not_Found_Exception::class => Response::HTTP_NOT_FOUND])]
+class Customer_Details
 {
-    #[ApiProperty(identifier: true, openapiContext: ['type' => 'integer', 'example' => 1])]
-    public int $customerId;
-
-    public array $personalInformation;
-
-    public array $ordersInformation;
-
-    public array $cartsInformation;
-
-    public array $productsInformation;
-
-    public array $messagesInformation;
-
-    public array $discountsInformation;
-
-    public array $sentEmailsInformation;
-
-    public array $lastConnectionsInformation;
-
-    public array $groupsInformation;
-
-    public array $addressesInformation;
-
-    public array $generalInformation;
-
-    public const QUERY_MAPPING = [
-        '[customerId]' => '[customerId]',
-    ];
+    #[Api_Property(identifier: true, openapiContext: ['type' => 'integer', 'example' => 1])]
+    public int $customer_id;
+    public array $personal_information;
+    public array $orders_information;
+    public array $carts_information;
+    public array $products_information;
+    public array $messages_information;
+    public array $discounts_information;
+    public array $sent_emails_information;
+    public array $last_connections_information;
+    public array $groups_information;
+    public array $addresses_information;
+    public array $general_information;
+    public const QUERY_MAPPING = ['[customerId]' => '[customerId]'];
 }

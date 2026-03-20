@@ -18,43 +18,21 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare (strict_types=1);
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Zone;
 
-declare(strict_types=1);
-
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Zone;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneNotFoundException;
-use PrestaShop\PrestaShop\Core\Search\Filters\ZoneFilters;
-use PrestaShopBundle\ApiPlatform\Metadata\PaginatedList;
-use PrestaShopBundle\ApiPlatform\Provider\QueryListProvider;
-use Symfony\Component\HttpFoundation\Response;
-
-#[ApiResource(
-    operations: [
-        new PaginatedList(
-            uriTemplate: '/zones',
-            provider: QueryListProvider::class,
-            scopes: ['zone_read'],
-            ApiResourceMapping: [
-                '[id_zone]' => '[zoneId]',
-                '[active]' => '[enabled]',
-            ],
-            gridDataFactory: 'prestashop.core.grid.data.factory.zone_decorator',
-            filtersClass: ZoneFilters::class,
-        ),
-    ],
-    exceptionToStatus: [
-        ZoneNotFoundException::class => Response::HTTP_NOT_FOUND,
-    ],
-)]
-class ZoneList
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Zone\Exception\Zone_Not_Found_Exception;
+use Presta_Shop\Presta_Shop\Core\Search\Filters\Zone_Filters;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Paginated_List;
+use Presta_Shop_Bundle\Api_Platform\Provider\Query_List_Provider;
+use Symfony\Component\Http_Foundation\Response;
+#[Api_Resource(operations: [new Paginated_List(uriTemplate: '/zones', provider: Query_List_Provider::class, scopes: ['zone_read'], ApiResourceMapping: ['[id_zone]' => '[zoneId]', '[active]' => '[enabled]'], gridDataFactory: 'prestashop.core.grid.data.factory.zone_decorator', filtersClass: Zone_Filters::class)], exceptionToStatus: [Zone_Not_Found_Exception::class => Response::HTTP_NOT_FOUND])]
+class Zone_List
 {
-    #[ApiProperty(identifier: true)]
-    public int $zoneId;
-
+    #[Api_Property(identifier: true)]
+    public int $zone_id;
     public string $name;
-
     public bool $enabled;
 }

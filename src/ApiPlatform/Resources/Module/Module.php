@@ -18,74 +18,26 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare (strict_types=1);
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Module;
 
-declare(strict_types=1);
-
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Module;
-
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\Module\Command\InstallModuleCommand;
-use PrestaShop\PrestaShop\Core\Domain\Module\Command\UpdateModuleStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Module\Exception\AlreadyInstalledModuleException;
-use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotInstalledException;
-use PrestaShop\PrestaShop\Core\Domain\Module\Query\GetModuleInfos;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSGet;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
-use PrestaShopBundle\ApiPlatform\Metadata\PaginatedList;
-
-#[ApiResource(
-    operations: [
-        new CQRSGet(
-            uriTemplate: '/modules/{technicalName}',
-            CQRSQuery: GetModuleInfos::class,
-            scopes: [
-                'module_read',
-            ],
-        ),
-        new CQRSUpdate(
-            uriTemplate: '/modules/{technicalName}/status',
-            CQRSCommand: UpdateModuleStatusCommand::class,
-            CQRSQuery: GetModuleInfos::class,
-            scopes: [
-                'module_write',
-            ],
-        ),
-        new CQRSUpdate(
-            uriTemplate: '/modules/{technicalName}/install',
-            CQRSCommand: InstallModuleCommand::class,
-            CQRSQuery: GetModuleInfos::class,
-            scopes: [
-                'module_write',
-            ],
-            allowEmptyBody: true,
-        ),
-        new PaginatedList(
-            uriTemplate: '/modules',
-            scopes: [
-                'module_read',
-            ],
-            gridDataFactory: 'prestashop.core.grid.data_factory.module',
-        ),
-    ],
-    normalizationContext: ['skip_null_values' => false],
-    exceptionToStatus: [
-        ModuleNotFoundException::class => 404,
-        ModuleNotInstalledException::class => 403,
-        AlreadyInstalledModuleException::class => 403,
-    ],
-)]
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Module\Command\Install_Module_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Module\Command\Update_Module_Status_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Module\Exception\Already_Installed_Module_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Module\Exception\Module_Not_Found_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Module\Exception\Module_Not_Installed_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Module\Query\Get_Module_Infos;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Get;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Update;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Paginated_List;
+#[Api_Resource(operations: [new Cqrs_Get(uriTemplate: '/modules/{technicalName}', CQRSQuery: Get_Module_Infos::class, scopes: ['module_read']), new Cqrs_Update(uriTemplate: '/modules/{technicalName}/status', CQRSCommand: Update_Module_Status_Command::class, CQRSQuery: Get_Module_Infos::class, scopes: ['module_write']), new Cqrs_Update(uriTemplate: '/modules/{technicalName}/install', CQRSCommand: Install_Module_Command::class, CQRSQuery: Get_Module_Infos::class, scopes: ['module_write'], allowEmptyBody: true), new Paginated_List(uriTemplate: '/modules', scopes: ['module_read'], gridDataFactory: 'prestashop.core.grid.data_factory.module')], normalizationContext: ['skip_null_values' => false], exceptionToStatus: [Module_Not_Found_Exception::class => 404, Module_Not_Installed_Exception::class => 403, Already_Installed_Module_Exception::class => 403])]
 class Module
 {
-    public ?int $moduleId = null;
-
-    public string $technicalName;
-
-    public string $moduleVersion;
-
-    public ?string $installedVersion = null;
-
+    public ?int $module_id = null;
+    public string $technical_name;
+    public string $module_version;
+    public ?string $installed_version = null;
     public bool $enabled;
-
     public bool $installed;
 }

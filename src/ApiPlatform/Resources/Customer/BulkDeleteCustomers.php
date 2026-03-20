@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,89 +19,27 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Customer;
 
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Customer;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDeleteCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerDeleteMethod;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSDelete;
-use Symfony\Component\HttpFoundation\Response;
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Command\Bulk_Delete_Customer_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Exception\Customer_Constraint_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Exception\Customer_Not_Found_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Value_Object\Customer_Delete_Method;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Delete;
+use Symfony\Component\Http_Foundation\Response;
 use Symfony\Component\Validator\Constraints as Assert;
-
-#[ApiResource(
-    operations: [
-        new CQRSDelete(
-            uriTemplate: '/customers/bulk-delete',
-            CQRSCommand: BulkDeleteCustomerCommand::class,
-            scopes: [
-                'customer_write',
-            ],
-            allowEmptyBody: false,
-            openapiContext: [
-                'requestBody' => [
-                    'required' => true,
-                    'content' => [
-                        'application/json' => [
-                            'schema' => [
-                                'type' => 'object',
-                                'required' => ['customerIds'],
-                                'properties' => [
-                                    'customerIds' => [
-                                        'type' => 'array',
-                                        'items' => ['type' => 'integer'],
-                                    ],
-                                    'deleteMethod' => [
-                                        'type' => 'string',
-                                        'enum' => [
-                                            CustomerDeleteMethod::ALLOW_CUSTOMER_REGISTRATION,
-                                            CustomerDeleteMethod::DENY_CUSTOMER_REGISTRATION,
-                                        ],
-                                        'description' => 'Method to use for customer deletion. Default: allow_registration_after',
-                                    ],
-                                ],
-                            ],
-                            'example' => [
-                                'customerIds' => [1, 2, 3],
-                                'deleteMethod' => 'allow_registration_after',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ),
-    ],
-    exceptionToStatus: [
-        CustomerConstraintException::class => Response::HTTP_UNPROCESSABLE_ENTITY,
-        CustomerNotFoundException::class => Response::HTTP_NOT_FOUND,
-    ],
-)]
-class BulkDeleteCustomers
+#[Api_Resource(operations: [new Cqrs_Delete(uriTemplate: '/customers/bulk-delete', CQRSCommand: Bulk_Delete_Customer_Command::class, scopes: ['customer_write'], allowEmptyBody: false, openapiContext: ['requestBody' => ['required' => true, 'content' => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['customerIds'], 'properties' => ['customerIds' => ['type' => 'array', 'items' => ['type' => 'integer']], 'deleteMethod' => ['type' => 'string', 'enum' => [Customer_Delete_Method::ALLOW_CUSTOMER_REGISTRATION, Customer_Delete_Method::DENY_CUSTOMER_REGISTRATION], 'description' => 'Method to use for customer deletion. Default: allow_registration_after']]], 'example' => ['customerIds' => [1, 2, 3], 'deleteMethod' => 'allow_registration_after']]]]])], exceptionToStatus: [Customer_Constraint_Exception::class => Response::HTTP_UNPROCESSABLE_ENTITY, Customer_Not_Found_Exception::class => Response::HTTP_NOT_FOUND])]
+class Bulk_Delete_Customers
 {
     /**
      * @var int[]
      */
-    #[ApiProperty(openapiContext: ['type' => 'array', 'items' => ['type' => 'integer'], 'example' => [1, 2, 3]])]
-    #[Assert\NotBlank()]
-    public array $customerIds;
-
-    #[ApiProperty(openapiContext: [
-        'type' => 'string',
-        'enum' => [
-            CustomerDeleteMethod::ALLOW_CUSTOMER_REGISTRATION,
-            CustomerDeleteMethod::DENY_CUSTOMER_REGISTRATION,
-        ],
-        'example' => CustomerDeleteMethod::ALLOW_CUSTOMER_REGISTRATION,
-    ])]
-    #[Assert\Choice(
-        choices: [
-            CustomerDeleteMethod::ALLOW_CUSTOMER_REGISTRATION,
-            CustomerDeleteMethod::DENY_CUSTOMER_REGISTRATION,
-        ],
-        message: 'The delete method must be either "allow_registration_after" or "deny_registration_after".',
-    )]
-    public string $deleteMethod = CustomerDeleteMethod::ALLOW_CUSTOMER_REGISTRATION;
+    #[Api_Property(openapiContext: ['type' => 'array', 'items' => ['type' => 'integer'], 'example' => [1, 2, 3]])]
+    #[Assert\Not_Blank]
+    public array $customer_ids;
+    #[Api_Property(openapiContext: ['type' => 'string', 'enum' => [Customer_Delete_Method::ALLOW_CUSTOMER_REGISTRATION, Customer_Delete_Method::DENY_CUSTOMER_REGISTRATION], 'example' => Customer_Delete_Method::ALLOW_CUSTOMER_REGISTRATION])]
+    #[Assert\Choice(choices: [Customer_Delete_Method::ALLOW_CUSTOMER_REGISTRATION, Customer_Delete_Method::DENY_CUSTOMER_REGISTRATION], message: 'The delete method must be either "allow_registration_after" or "deny_registration_after".')]
+    public string $delete_method = Customer_Delete_Method::ALLOW_CUSTOMER_REGISTRATION;
 }

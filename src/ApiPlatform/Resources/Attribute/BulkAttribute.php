@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,38 +19,22 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Attribute;
 
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Attribute;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\BulkDeleteAttributeCommand;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSDelete;
-use Symfony\Component\HttpFoundation\Response;
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Attribute_Group\Attribute\Command\Bulk_Delete_Attribute_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Attribute_Group\Attribute\Exception\Attribute_Not_Found_Exception;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Delete;
+use Symfony\Component\Http_Foundation\Response;
 use Symfony\Component\Validator\Constraints as Assert;
-
-#[ApiResource(
-    operations: [
-        new CQRSDelete(
-            uriTemplate: '/attributes/attributes/bulk-delete',
-            CQRSCommand: BulkDeleteAttributeCommand::class,
-            scopes: [
-                'attribute_write',
-            ],
-            allowEmptyBody: false,
-        ),
-    ],
-    exceptionToStatus: [
-        AttributeNotFoundException::class => Response::HTTP_NOT_FOUND,
-    ],
-)]
-class BulkAttribute
+#[Api_Resource(operations: [new Cqrs_Delete(uriTemplate: '/attributes/attributes/bulk-delete', CQRSCommand: Bulk_Delete_Attribute_Command::class, scopes: ['attribute_write'], allowEmptyBody: false)], exceptionToStatus: [Attribute_Not_Found_Exception::class => Response::HTTP_NOT_FOUND])]
+class Bulk_Attribute
 {
     /**
      * @var int[]
      */
-    #[ApiProperty(openapiContext: ['type' => 'array', 'items' => ['type' => 'integer'], 'example' => [1, 3]])]
-    #[Assert\NotBlank]
-    public array $attributeIds;
+    #[Api_Property(openapiContext: ['type' => 'array', 'items' => ['type' => 'integer'], 'example' => [1, 3]])]
+    #[Assert\Not_Blank]
+    public array $attribute_ids;
 }

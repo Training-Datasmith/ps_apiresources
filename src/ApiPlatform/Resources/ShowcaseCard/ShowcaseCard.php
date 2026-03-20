@@ -18,52 +18,18 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare (strict_types=1);
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Showcase_Card;
 
-declare(strict_types=1);
-
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\ShowcaseCard;
-
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Command\CloseShowcaseCardCommand;
-use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSGet;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
-
-#[ApiResource(
-    operations: [
-        new CQRSGet(
-            uriTemplate: '/showcase-cards/{showcaseCardName}/{employeeId}',
-            requirements: [
-                'showcaseCardName' => '[a-z_-]+',
-                'employeeId' => '\d+',
-            ],
-            CQRSQuery: GetShowcaseCardIsClosed::class,
-            CQRSQueryMapping: [
-                '[_queryResult]' => '[closed]',
-            ],
-            scopes: ['showcase_card_read'],
-        ),
-        new CQRSUpdate(
-            uriTemplate: '/showcase-cards/{showcaseCardName}/{employeeId}/close',
-            requirements: [
-                'showcaseCardName' => '[a-z_-]+',
-                'employeeId' => '\d+',
-            ],
-            allowEmptyBody: true,
-            CQRSCommand: CloseShowcaseCardCommand::class,
-            CQRSQuery: GetShowcaseCardIsClosed::class,
-            CQRSQueryMapping: [
-                '[_queryResult]' => '[closed]',
-            ],
-            scopes: ['showcase_card_write'],
-        ),
-    ],
-)]
-class ShowcaseCard
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Showcase_Card\Command\Close_Showcase_Card_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Showcase_Card\Query\Get_Showcase_Card_Is_Closed;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Get;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Update;
+#[Api_Resource(operations: [new Cqrs_Get(uriTemplate: '/showcase-cards/{showcaseCardName}/{employeeId}', requirements: ['showcaseCardName' => '[a-z_-]+', 'employeeId' => '\d+'], CQRSQuery: Get_Showcase_Card_Is_Closed::class, CQRSQueryMapping: ['[_queryResult]' => '[closed]'], scopes: ['showcase_card_read']), new Cqrs_Update(uriTemplate: '/showcase-cards/{showcaseCardName}/{employeeId}/close', requirements: ['showcaseCardName' => '[a-z_-]+', 'employeeId' => '\d+'], allowEmptyBody: true, CQRSCommand: Close_Showcase_Card_Command::class, CQRSQuery: Get_Showcase_Card_Is_Closed::class, CQRSQueryMapping: ['[_queryResult]' => '[closed]'], scopes: ['showcase_card_write'])])]
+class Showcase_Card
 {
-    public string $showcaseCardName;
-
-    public int $employeeId;
-
+    public string $showcase_card_name;
+    public int $employee_id;
     public bool $closed;
 }

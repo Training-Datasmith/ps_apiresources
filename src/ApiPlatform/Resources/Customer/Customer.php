@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,181 +19,69 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Customer;
 
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Customer;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerDeleteMethod;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSCreate;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSDelete;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSGet;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSPartialUpdate;
-use Symfony\Component\HttpFoundation\Response;
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Decimal\Decimal_Number;
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Command\Add_Customer_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Command\Delete_Customer_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Command\Edit_Customer_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Exception\Customer_Constraint_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Exception\Customer_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Exception\Customer_Not_Found_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Exception\Duplicate_Customer_Email_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Query\Get_Customer_For_Editing;
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Value_Object\Customer_Delete_Method;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Create;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Delete;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Get;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Partial_Update;
+use Symfony\Component\Http_Foundation\Response;
 use Symfony\Component\Validator\Constraints as Assert;
-
-#[ApiResource(
-    operations: [
-        new CQRSCreate(
-            uriTemplate: '/customers',
-            CQRSCommand: AddCustomerCommand::class,
-            CQRSQuery: GetCustomerForEditing::class,
-            scopes: [
-                'customer_write',
-            ],
-            CQRSQueryMapping: self::QUERY_MAPPING,
-            CQRSCommandMapping: self::COMMAND_MAPPING,
-            validationContext: ['groups' => ['Default', 'Create']],
-        ),
-        new CQRSGet(
-            uriTemplate: '/customers/{customerId}',
-            requirements: ['customerId' => '\d+'],
-            CQRSQuery: GetCustomerForEditing::class,
-            scopes: [
-                'customer_read',
-            ],
-            CQRSQueryMapping: self::QUERY_MAPPING,
-        ),
-        new CQRSPartialUpdate(
-            uriTemplate: '/customers/{customerId}',
-            requirements: ['customerId' => '\d+'],
-            read: false,
-            CQRSCommand: EditCustomerCommand::class,
-            CQRSCommandMapping: self::COMMAND_MAPPING,
-            CQRSQuery: GetCustomerForEditing::class,
-            CQRSQueryMapping: self::QUERY_MAPPING,
-            scopes: [
-                'customer_write',
-            ],
-        ),
-        new CQRSDelete(
-            uriTemplate: '/customers/{customerId}',
-            CQRSCommand: DeleteCustomerCommand::class,
-            scopes: [
-                'customer_write',
-            ],
-            CQRSCommandMapping: self::DELETE_COMMAND_MAPPING,
-            openapiContext: [
-                'requestBody' => [
-                    'required' => true,
-                    'content' => [
-                        'application/json' => [
-                            'schema' => [
-                                'type' => 'object',
-                                'required' => ['deleteMethod'],
-                                'properties' => [
-                                    'deleteMethod' => [
-                                        'type' => 'string',
-                                        'enum' => [
-                                            CustomerDeleteMethod::ALLOW_CUSTOMER_REGISTRATION,
-                                            CustomerDeleteMethod::DENY_CUSTOMER_REGISTRATION,
-                                        ],
-                                        'description' => 'Method to use for customer deletion',
-                                        'example' => CustomerDeleteMethod::ALLOW_CUSTOMER_REGISTRATION,
-                                    ],
-                                ],
-                            ],
-                            'example' => [
-                                'deleteMethod' => 'allow_registration_after',
-                            ],
-                        ],
-                    ],
-                    'description' => 'Request body specifying the deletion method',
-                ],
-            ],
-        ),
-    ],
-    normalizationContext: ['skip_null_values' => false],
-    exceptionToStatus: [
-        CustomerConstraintException::class => Response::HTTP_UNPROCESSABLE_ENTITY,
-        CustomerNotFoundException::class => Response::HTTP_NOT_FOUND,
-        DuplicateCustomerEmailException::class => Response::HTTP_UNPROCESSABLE_ENTITY,
-        CustomerException::class => Response::HTTP_UNPROCESSABLE_ENTITY,
-    ],
-)]
+#[Api_Resource(operations: [new Cqrs_Create(uriTemplate: '/customers', CQRSCommand: Add_Customer_Command::class, CQRSQuery: Get_Customer_For_Editing::class, scopes: ['customer_write'], CQRSQueryMapping: self::QUERY_MAPPING, CQRSCommandMapping: self::COMMAND_MAPPING, validationContext: ['groups' => ['Default', 'Create']]), new Cqrs_Get(uriTemplate: '/customers/{customerId}', requirements: ['customerId' => '\d+'], CQRSQuery: Get_Customer_For_Editing::class, scopes: ['customer_read'], CQRSQueryMapping: self::QUERY_MAPPING), new Cqrs_Partial_Update(uriTemplate: '/customers/{customerId}', requirements: ['customerId' => '\d+'], read: false, CQRSCommand: Edit_Customer_Command::class, CQRSCommandMapping: self::COMMAND_MAPPING, CQRSQuery: Get_Customer_For_Editing::class, CQRSQueryMapping: self::QUERY_MAPPING, scopes: ['customer_write']), new Cqrs_Delete(uriTemplate: '/customers/{customerId}', CQRSCommand: Delete_Customer_Command::class, scopes: ['customer_write'], CQRSCommandMapping: self::DELETE_COMMAND_MAPPING, openapiContext: ['requestBody' => ['required' => true, 'content' => ['application/json' => ['schema' => ['type' => 'object', 'required' => ['deleteMethod'], 'properties' => ['deleteMethod' => ['type' => 'string', 'enum' => [Customer_Delete_Method::ALLOW_CUSTOMER_REGISTRATION, Customer_Delete_Method::DENY_CUSTOMER_REGISTRATION], 'description' => 'Method to use for customer deletion', 'example' => Customer_Delete_Method::ALLOW_CUSTOMER_REGISTRATION]]], 'example' => ['deleteMethod' => 'allow_registration_after']]], 'description' => 'Request body specifying the deletion method']])], normalizationContext: ['skip_null_values' => false], exceptionToStatus: [Customer_Constraint_Exception::class => Response::HTTP_UNPROCESSABLE_ENTITY, Customer_Not_Found_Exception::class => Response::HTTP_NOT_FOUND, Duplicate_Customer_Email_Exception::class => Response::HTTP_UNPROCESSABLE_ENTITY, Customer_Exception::class => Response::HTTP_UNPROCESSABLE_ENTITY])]
 class Customer
 {
-    #[ApiProperty(identifier: true, openapiContext: ['type' => 'integer', 'example' => 1])]
-    public int $customerId;
-
-    #[Assert\NotBlank(groups: ['Create'])]
-    public string $firstName;
-
-    #[Assert\NotBlank(groups: ['Create'])]
-    public string $lastName;
-
-    #[Assert\NotBlank(groups: ['Create'])]
+    #[Api_Property(identifier: true, openapiContext: ['type' => 'integer', 'example' => 1])]
+    public int $customer_id;
+    #[Assert\Not_Blank(groups: ['Create'])]
+    public string $first_name;
+    #[Assert\Not_Blank(groups: ['Create'])]
+    public string $last_name;
+    #[Assert\Not_Blank(groups: ['Create'])]
     #[Assert\Email(mode: Assert\Email::VALIDATION_MODE_STRICT)]
     public string $email;
-
-    #[Assert\NotBlank(groups: ['Create'])]
+    #[Assert\Not_Blank(groups: ['Create'])]
     public string $password;
-
-    #[Assert\NotBlank(groups: ['Create'])]
-    #[ApiProperty(openapiContext: ['type' => 'integer', 'example' => 3])]
-    public int $defaultGroupId;
-
-    #[Assert\NotBlank(groups: ['Create'])]
-    #[ApiProperty(openapiContext: ['type' => 'array', 'items' => ['type' => 'integer'], 'example' => [1, 3]])]
-    public array $groupIds;
-
-    #[ApiProperty(openapiContext: ['type' => 'integer', 'example' => 1])]
-    public ?int $genderId = null;
-
-    #[ApiProperty(openapiContext: ['type' => 'boolean', 'example' => true])]
+    #[Assert\Not_Blank(groups: ['Create'])]
+    #[Api_Property(openapiContext: ['type' => 'integer', 'example' => 3])]
+    public int $default_group_id;
+    #[Assert\Not_Blank(groups: ['Create'])]
+    #[Api_Property(openapiContext: ['type' => 'array', 'items' => ['type' => 'integer'], 'example' => [1, 3]])]
+    public array $group_ids;
+    #[Api_Property(openapiContext: ['type' => 'integer', 'example' => 1])]
+    public ?int $gender_id = null;
+    #[Api_Property(openapiContext: ['type' => 'boolean', 'example' => true])]
     public bool $enabled;
-
-    #[ApiProperty(openapiContext: ['type' => 'boolean', 'example' => false])]
-    public bool $newsletterSubscribed;
-
-    #[ApiProperty(openapiContext: ['type' => 'boolean', 'example' => false])]
-    public bool $partnerOffersSubscribed;
-
+    #[Api_Property(openapiContext: ['type' => 'boolean', 'example' => false])]
+    public bool $newsletter_subscribed;
+    #[Api_Property(openapiContext: ['type' => 'boolean', 'example' => false])]
+    public bool $partner_offers_subscribed;
     public ?string $birthday = null;
-
-    public ?string $companyName = null;
-
-    public ?string $siretCode = null;
-
-    public ?string $apeCode = null;
-
+    public ?string $company_name = null;
+    public ?string $siret_code = null;
+    public ?string $ape_code = null;
     public ?string $website = null;
-
-    #[ApiProperty(openapiContext: ['type' => 'string', 'example' => '1000.50'])]
-    public ?DecimalNumber $allowedOutstandingAmount = null;
-
-    #[ApiProperty(openapiContext: ['type' => 'integer', 'example' => 30])]
-    public ?int $maxPaymentDays = null;
-
-    #[ApiProperty(openapiContext: ['type' => 'integer', 'example' => 1])]
-    public ?int $riskId = null;
-
-    #[ApiProperty(openapiContext: ['type' => 'boolean', 'example' => false])]
+    #[Api_Property(openapiContext: ['type' => 'string', 'example' => '1000.50'])]
+    public ?Decimal_Number $allowed_outstanding_amount = null;
+    #[Api_Property(openapiContext: ['type' => 'integer', 'example' => 30])]
+    public ?int $max_payment_days = null;
+    #[Api_Property(openapiContext: ['type' => 'integer', 'example' => 1])]
+    public ?int $risk_id = null;
+    #[Api_Property(openapiContext: ['type' => 'boolean', 'example' => false])]
     public bool $guest;
-
-    public ?string $deleteMethod = null;
-
-    public const QUERY_MAPPING = [
-        '[id]' => '[customerId]',
-    ];
-
-    public const COMMAND_MAPPING = [
-        '[_context][shopId]' => '[shopId]',
-        '[partnerOffersSubscribed]' => '[isPartnerOffersSubscribed]',
-        '[guest]' => '[isGuest]',
-        '[enabled]' => '[isEnabled]',
-    ];
-
-    public const DELETE_COMMAND_MAPPING = [
-        '[deleteMethod]' => '[deleteMethod]',
-    ];
+    public ?string $delete_method = null;
+    public const QUERY_MAPPING = ['[id]' => '[customerId]'];
+    public const COMMAND_MAPPING = ['[_context][shopId]' => '[shopId]', '[partnerOffersSubscribed]' => '[isPartnerOffersSubscribed]', '[guest]' => '[isGuest]', '[enabled]' => '[isEnabled]'];
+    public const DELETE_COMMAND_MAPPING = ['[deleteMethod]' => '[deleteMethod]'];
 }

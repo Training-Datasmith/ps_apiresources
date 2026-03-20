@@ -18,71 +18,61 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare (strict_types=1);
+namespace Presta_Shop\Module\Api_Resources\Serializer;
 
-declare(strict_types=1);
-
-namespace PrestaShop\Module\APIResources\Serializer;
-
-use PrestaShopBundle\ApiPlatform\Serializer\CQRSApiSerializer;
-
+use Presta_Shop_Bundle\Api_Platform\Serializer\Cqrs_Api_Serializer;
 /**
  * Extends CQRSApiSerializer to add automatic type casting for query parameters.
  */
-class QueryParameterTypeCastSerializer extends CQRSApiSerializer
+class Query_Parameter_Type_Cast_Serializer extends Cqrs_Api_Serializer
 {
     /**
      * {@inheritdoc}
      */
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
     {
-        if (is_array($data) && str_starts_with($type, 'PrestaShop\\PrestaShop\\Core\\Domain\\')) {
-            $data = $this->castQueryParametersToExpectedTypes($data, $type);
+        if (is_array($data) && str_starts_with($type, 'PrestaShop\PrestaShop\Core\Domain\\')) {
+            $data = $this->cast_query_parameters_to_expected_types($data, $type);
         }
-
         return parent::denormalize($data, $type, $format, $context);
     }
-
     /**
      * Cast string query parameter values to their expected types based on the CQRS query constructor.
      */
-    private function castQueryParametersToExpectedTypes(array $data, string $queryClass): array
+    private function cast_query_parameters_to_expected_types(array $data, string $query_class): array
     {
         try {
-            $reflection = new \ReflectionClass($queryClass);
-            $constructor = $reflection->getConstructor();
-
+            $reflection = new \ReflectionClass($query_class);
+            $constructor = $reflection->get_constructor();
             if (!$constructor) {
                 return $data;
             }
-
-            foreach ($constructor->getParameters() as $parameter) {
-                $paramName = $parameter->getName();
-                if (!array_key_exists($paramName, $data)) {
+            foreach ($constructor->get_parameters() as $parameter) {
+                $param_name = $parameter->get_name();
+                if (!array_key_exists($param_name, $data)) {
                     continue;
                 }
-                if (!is_string($data[$paramName])) {
+                if (!is_string($data[$param_name])) {
                     continue;
                 }
-
-                $type = $parameter->getType();
+                $type = $parameter->get_type();
                 if (!$type instanceof \ReflectionNamedType) {
                     continue;
                 }
-                if (!$type->isBuiltin()) {
+                if (!$type->is_builtin()) {
                     continue;
                 }
-
-                $data[$paramName] = match ($type->getName()) {
-                    'int' => (int) $data[$paramName],
-                    'float' => (float) $data[$paramName],
-                    'bool' => filter_var($data[$paramName], FILTER_VALIDATE_BOOLEAN),
-                    default => $data[$paramName],
+                $data[$param_name] = match ($type->get_name()) {
+                    'int' => (int) $data[$param_name],
+                    'float' => (float) $data[$param_name],
+                    'bool' => filter_var($data[$param_name], FILTER_VALIDATE_BOOLEAN),
+                    default => $data[$param_name],
                 };
             }
-        } catch (\ReflectionException) {
+        } catch (\Reflection_Exception) {
             return $data;
         }
-
         return $data;
     }
 }

@@ -18,29 +18,14 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare (strict_types=1);
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Module;
 
-declare(strict_types=1);
-
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Module;
-
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\Module\Command\UpgradeModuleCommand;
-use PrestaShop\PrestaShop\Core\Domain\Module\Query\GetModuleInfos;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
-
-#[ApiResource(
-    operations: [
-        new CQRSUpdate(
-            uriTemplate: '/modules/{technicalName}/upgrade',
-            CQRSCommand: UpgradeModuleCommand::class,
-            CQRSQuery: GetModuleInfos::class,
-            scopes: [
-                'module_write',
-            ],
-            allowEmptyBody: true,
-        ),
-    ],
-)]
-class UpgradeModule extends Module
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Module\Command\Upgrade_Module_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Module\Query\Get_Module_Infos;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Update;
+#[Api_Resource(operations: [new Cqrs_Update(uriTemplate: '/modules/{technicalName}/upgrade', CQRSCommand: Upgrade_Module_Command::class, CQRSQuery: Get_Module_Infos::class, scopes: ['module_write'], allowEmptyBody: true)])]
+class Upgrade_Module extends Module
 {
 }

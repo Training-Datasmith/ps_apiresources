@@ -18,43 +18,21 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare (strict_types=1);
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Tax_Rules_Group;
 
-declare(strict_types=1);
-
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\TaxRulesGroup;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupNotFoundException;
-use PrestaShop\PrestaShop\Core\Search\Filters\TaxRulesGroupFilters;
-use PrestaShopBundle\ApiPlatform\Metadata\PaginatedList;
-use PrestaShopBundle\ApiPlatform\Provider\QueryListProvider;
-use Symfony\Component\HttpFoundation\Response;
-
-#[ApiResource(
-    operations: [
-        new PaginatedList(
-            uriTemplate: '/tax-rules-groups',
-            provider: QueryListProvider::class,
-            scopes: ['tax_rules_group_read'],
-            ApiResourceMapping: [
-                '[id_tax_rules_group]' => '[taxRulesGroupId]',
-                '[active]' => '[enabled]',
-            ],
-            gridDataFactory: 'prestashop.core.grid.data.factory.tax_rules_group',
-            filtersClass: TaxRulesGroupFilters::class,
-        ),
-    ],
-    exceptionToStatus: [
-        TaxRulesGroupNotFoundException::class => Response::HTTP_NOT_FOUND,
-    ],
-)]
-class TaxRulesGroupList
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Tax_Rules_Group\Exception\Tax_Rules_Group_Not_Found_Exception;
+use Presta_Shop\Presta_Shop\Core\Search\Filters\Tax_Rules_Group_Filters;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Paginated_List;
+use Presta_Shop_Bundle\Api_Platform\Provider\Query_List_Provider;
+use Symfony\Component\Http_Foundation\Response;
+#[Api_Resource(operations: [new Paginated_List(uriTemplate: '/tax-rules-groups', provider: Query_List_Provider::class, scopes: ['tax_rules_group_read'], ApiResourceMapping: ['[id_tax_rules_group]' => '[taxRulesGroupId]', '[active]' => '[enabled]'], gridDataFactory: 'prestashop.core.grid.data.factory.tax_rules_group', filtersClass: Tax_Rules_Group_Filters::class)], exceptionToStatus: [Tax_Rules_Group_Not_Found_Exception::class => Response::HTTP_NOT_FOUND])]
+class Tax_Rules_Group_List
 {
-    #[ApiProperty(identifier: true)]
-    public int $taxRulesGroupId;
-
+    #[Api_Property(identifier: true)]
+    public int $tax_rules_group_id;
     public string $name;
-
     public bool $enabled;
 }

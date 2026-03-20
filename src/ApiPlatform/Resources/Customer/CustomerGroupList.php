@@ -18,40 +18,19 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare (strict_types=1);
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Customer;
 
-declare(strict_types=1);
-
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Customer;
-
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupNotFoundException;
-use PrestaShopBundle\ApiPlatform\Metadata\PaginatedList;
-
-#[ApiResource(
-    operations: [
-        new PaginatedList(
-            uriTemplate: '/customers/groups',
-            gridDataFactory: 'prestashop.core.grid.data.factory.customer_groups',
-            ApiResourceMapping: [
-                '[id_group]' => '[customerGroupId]',
-                '[reduction]' => '[reductionPercent]',
-                '[show_prices]' => '[showPrice]',
-                '[members]' => '[customers]',
-            ],
-        ),
-    ],
-    exceptionToStatus: [GroupNotFoundException::class => 404],
-)]
-class CustomerGroupList
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Decimal\Decimal_Number;
+use Presta_Shop\Presta_Shop\Core\Domain\Customer\Group\Exception\Group_Not_Found_Exception;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Paginated_List;
+#[Api_Resource(operations: [new Paginated_List(uriTemplate: '/customers/groups', gridDataFactory: 'prestashop.core.grid.data.factory.customer_groups', ApiResourceMapping: ['[id_group]' => '[customerGroupId]', '[reduction]' => '[reductionPercent]', '[show_prices]' => '[showPrice]', '[members]' => '[customers]'])], exceptionToStatus: [Group_Not_Found_Exception::class => 404])]
+class Customer_Group_List
 {
-    public int $customerGroupId;
-
+    public int $customer_group_id;
     public string $name;
-
-    public DecimalNumber $reductionPercent;
-
+    public Decimal_Number $reduction_percent;
     public int $customers;
-
-    public bool $showPrice;
+    public bool $show_price;
 }

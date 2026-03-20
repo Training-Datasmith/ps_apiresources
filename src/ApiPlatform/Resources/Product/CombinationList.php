@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,72 +19,28 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Product;
 
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Product;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
-use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSPaginate;
-use Symfony\Component\HttpFoundation\Response;
-
-#[ApiResource(
-    operations: [
-        new CQRSPaginate(
-            uriTemplate: '/products/{productId}/combinations',
-            CQRSQuery: GetEditableCombinationsList::class,
-            scopes: [
-                'product_read',
-            ],
-            CQRSQueryMapping: [
-                '[_context][langId]' => '[languageId]',
-                '[_context][shopConstraint]' => '[shopConstraint]',
-            ],
-            ApiResourceMapping: [
-                '[combinationName]' => '[name]',
-                '[attributesInformation]' => '[attributes]',
-                '[impactOnPrice]' => '[impactOnPriceTaxExcluded]',
-            ],
-            filtersClass: ProductCombinationFilters::class,
-            filtersMapping: [
-                '[_context][shopId]' => '[shopId]',
-            ],
-            itemsField: 'combinations',
-            countField: 'totalCombinationsCount',
-        ),
-    ],
-    exceptionToStatus: [
-        ProductNotFoundException::class => Response::HTTP_NOT_FOUND,
-    ],
-)]
-class CombinationList
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Decimal\Decimal_Number;
+use Presta_Shop\Presta_Shop\Core\Domain\Product\Combination\Query\Get_Editable_Combinations_List;
+use Presta_Shop\Presta_Shop\Core\Domain\Product\Exception\Product_Not_Found_Exception;
+use Presta_Shop\Presta_Shop\Core\Search\Filters\Product_Combination_Filters;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Paginate;
+use Symfony\Component\Http_Foundation\Response;
+#[Api_Resource(operations: [new Cqrs_Paginate(uriTemplate: '/products/{productId}/combinations', CQRSQuery: Get_Editable_Combinations_List::class, scopes: ['product_read'], CQRSQueryMapping: ['[_context][langId]' => '[languageId]', '[_context][shopConstraint]' => '[shopConstraint]'], ApiResourceMapping: ['[combinationName]' => '[name]', '[attributesInformation]' => '[attributes]', '[impactOnPrice]' => '[impactOnPriceTaxExcluded]'], filtersClass: Product_Combination_Filters::class, filtersMapping: ['[_context][shopId]' => '[shopId]'], itemsField: 'combinations', countField: 'totalCombinationsCount')], exceptionToStatus: [Product_Not_Found_Exception::class => Response::HTTP_NOT_FOUND])]
+class Combination_List
 {
-    public int $productId;
-    public int $combinationId;
+    public int $product_id;
+    public int $combination_id;
     public string $name;
     public bool $default;
     public string $reference;
-    public DecimalNumber $impactOnPriceTaxExcluded;
-    public DecimalNumber $ecoTax;
+    public Decimal_Number $impact_on_price_tax_excluded;
+    public Decimal_Number $eco_tax;
     public int $quantity;
-    public string $imageUrl;
-    #[ApiProperty(
-        openapiContext: [
-            'type' => 'array',
-            'description' => 'Combination attributes',
-            'items' => [
-                'type' => 'object',
-                'properties' => [
-                    'attributeGroupId' => ['type' => 'integer'],
-                    'attributeGroupName' => ['type' => 'string'],
-                    'attributeId' => ['type' => 'integer'],
-                    'attributeName' => ['type' => 'string'],
-                ],
-            ],
-        ]
-    )]
+    public string $image_url;
+    #[Api_Property(openapiContext: ['type' => 'array', 'description' => 'Combination attributes', 'items' => ['type' => 'object', 'properties' => ['attributeGroupId' => ['type' => 'integer'], 'attributeGroupName' => ['type' => 'string'], 'attributeId' => ['type' => 'integer'], 'attributeName' => ['type' => 'string']]]])]
     public array $attributes;
 }

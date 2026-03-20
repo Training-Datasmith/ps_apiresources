@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,42 +19,20 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Product;
 
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Product;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\SetProductShopsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSPartialUpdate;
-use Symfony\Component\HttpFoundation\Response;
-
-#[ApiResource(
-    operations: [
-        new CQRSPartialUpdate(
-            uriTemplate: '/products/{productId}/shops',
-            CQRSCommand: SetProductShopsCommand::class,
-            CQRSQuery: GetProductForEditing::class,
-            scopes: [
-                'product_write',
-            ],
-            CQRSQueryMapping: Product::QUERY_MAPPING,
-            CQRSCommandMapping: [
-                '[associatedShopIds]' => '[shopIds]',
-            ],
-        ),
-    ],
-    exceptionToStatus: [
-        ProductNotFoundException::class => Response::HTTP_NOT_FOUND,
-        ShopAssociationNotFound::class => Response::HTTP_NOT_FOUND,
-    ],
-)]
-class ProductShops extends Product
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Product\Exception\Product_Not_Found_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Product\Query\Get_Product_For_Editing;
+use Presta_Shop\Presta_Shop\Core\Domain\Product\Shop\Command\Set_Product_Shops_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Shop\Exception\Shop_Association_Not_Found;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Partial_Update;
+use Symfony\Component\Http_Foundation\Response;
+#[Api_Resource(operations: [new Cqrs_Partial_Update(uriTemplate: '/products/{productId}/shops', CQRSCommand: Set_Product_Shops_Command::class, CQRSQuery: Get_Product_For_Editing::class, scopes: ['product_write'], CQRSQueryMapping: Product::QUERY_MAPPING, CQRSCommandMapping: ['[associatedShopIds]' => '[shopIds]'])], exceptionToStatus: [Product_Not_Found_Exception::class => Response::HTTP_NOT_FOUND, Shop_Association_Not_Found::class => Response::HTTP_NOT_FOUND])]
+class Product_Shops extends Product
 {
-    public int $sourceShopId;
-
-    #[ApiProperty(openapiContext: ['type' => 'array', 'items' => ['type' => 'integer']])]
-    public array $associatedShopIds;
+    public int $source_shop_id;
+    #[Api_Property(openapiContext: ['type' => 'array', 'items' => ['type' => 'integer']])]
+    public array $associated_shop_ids;
 }

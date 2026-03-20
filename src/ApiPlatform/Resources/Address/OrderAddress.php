@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,119 +19,56 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Address;
 
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Address;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
-use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditOrderAddressCommand;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetCustomerAddressForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAddressTypeException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSPartialUpdate;
-use Symfony\Component\HttpFoundation\Response;
-
-#[ApiResource(
-    operations: [
-        new CQRSPartialUpdate(
-            uriTemplate: '/addresses/orders/{orderId}',
-            CQRSCommand: EditOrderAddressCommand::class,
-            CQRSQuery: GetCustomerAddressForEditing::class,
-            scopes: [
-                'address_write',
-            ],
-            CQRSQueryMapping: self::QUERY_MAPPING,
-            CQRSCommandMapping: self::COMMAND_MAPPING,
-            validationContext: ['groups' => ['Default', 'Update']],
-        ),
-    ],
-    exceptionToStatus: [
-        AddressConstraintException::class => Response::HTTP_UNPROCESSABLE_ENTITY,
-        CountryConstraintException::class => Response::HTTP_UNPROCESSABLE_ENTITY,
-        StateConstraintException::class => Response::HTTP_UNPROCESSABLE_ENTITY,
-        InvalidAddressTypeException::class => Response::HTTP_UNPROCESSABLE_ENTITY,
-        OrderNotFoundException::class => Response::HTTP_NOT_FOUND,
-    ],
-)]
-class OrderAddress
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Constraint_Validator\Constraints\Typed_Regex;
+use Presta_Shop\Presta_Shop\Core\Domain\Address\Command\Edit_Order_Address_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Address\Exception\Address_Constraint_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Address\Query\Get_Customer_Address_For_Editing;
+use Presta_Shop\Presta_Shop\Core\Domain\Country\Exception\Country_Constraint_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Order\Exception\Invalid_Address_Type_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Order\Exception\Order_Not_Found_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\State\Exception\State_Constraint_Exception;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Partial_Update;
+use Symfony\Component\Http_Foundation\Response;
+#[Api_Resource(operations: [new Cqrs_Partial_Update(uriTemplate: '/addresses/orders/{orderId}', CQRSCommand: Edit_Order_Address_Command::class, CQRSQuery: Get_Customer_Address_For_Editing::class, scopes: ['address_write'], CQRSQueryMapping: self::QUERY_MAPPING, CQRSCommandMapping: self::COMMAND_MAPPING, validationContext: ['groups' => ['Default', 'Update']])], exceptionToStatus: [Address_Constraint_Exception::class => Response::HTTP_UNPROCESSABLE_ENTITY, Country_Constraint_Exception::class => Response::HTTP_UNPROCESSABLE_ENTITY, State_Constraint_Exception::class => Response::HTTP_UNPROCESSABLE_ENTITY, Invalid_Address_Type_Exception::class => Response::HTTP_UNPROCESSABLE_ENTITY, Order_Not_Found_Exception::class => Response::HTTP_NOT_FOUND])]
+class Order_Address
 {
     // Identifiers from URI
-    #[ApiProperty(identifier: true)]
-    public int $orderId = 0;
-
-    public int $addressId;
-
-    public int $customerId;
-
-    public string $addressType;
-
+    #[Api_Property(identifier: true)]
+    public int $order_id = 0;
+    public int $address_id;
+    public int $customer_id;
+    public string $address_type;
     // Optional address fields for update
-    public ?string $addressAlias = null;
-
-    public ?string $firstName = null;
-
-    public ?string $lastName = null;
-
-    #[TypedRegex([
-        'type' => TypedRegex::TYPE_ADDRESS,
-    ])]
+    public ?string $address_alias = null;
+    public ?string $first_name = null;
+    public ?string $last_name = null;
+    #[Typed_Regex(['type' => Typed_Regex::TYPE_ADDRESS])]
     public ?string $address = null;
-
-    #[TypedRegex([
-        'type' => TypedRegex::TYPE_ADDRESS,
-    ])]
+    #[Typed_Regex(['type' => Typed_Regex::TYPE_ADDRESS])]
     public ?string $address2 = null;
-
-    #[TypedRegex([
-        'type' => TypedRegex::TYPE_CITY_NAME,
-    ])]
+    #[Typed_Regex(['type' => Typed_Regex::TYPE_CITY_NAME])]
     public ?string $city = null;
-
-    #[TypedRegex([
-        'type' => TypedRegex::TYPE_POST_CODE,
-    ])]
-    public ?string $postCode = null;
-
-    public ?int $countryId = null;
-
-    public ?int $stateId = null;
-
-    #[TypedRegex([
-        'type' => TypedRegex::TYPE_PHONE_NUMBER,
-    ])]
-    public ?string $homePhone = null;
-
-    #[TypedRegex([
-        'type' => TypedRegex::TYPE_PHONE_NUMBER,
-    ])]
-    public ?string $mobilePhone = null;
-
+    #[Typed_Regex(['type' => Typed_Regex::TYPE_POST_CODE])]
+    public ?string $post_code = null;
+    public ?int $country_id = null;
+    public ?int $state_id = null;
+    #[Typed_Regex(['type' => Typed_Regex::TYPE_PHONE_NUMBER])]
+    public ?string $home_phone = null;
+    #[Typed_Regex(['type' => Typed_Regex::TYPE_PHONE_NUMBER])]
+    public ?string $mobile_phone = null;
     public ?string $company = null;
-
-    public ?string $vatNumber = null;
-
+    public ?string $vat_number = null;
     public ?string $other = null;
-
-    #[TypedRegex([
-        'type' => TypedRegex::TYPE_DNI_LITE,
-    ])]
+    #[Typed_Regex(['type' => Typed_Regex::TYPE_DNI_LITE])]
     public ?string $dni = null;
-
     public const QUERY_MAPPING = [
         // This is to handle NoStateId that is not normalized properly, it was fixed in 9.1 with
         // https://github.com/PrestaShop/PrestaShop/pull/40912
         '[stateId][value]' => '[stateId]',
     ];
-
-    public const COMMAND_MAPPING = [
-        '[postCode]' => '[postcode]',
-        '[homePhone]' => '[phone]',
-        '[mobilePhone]' => '[phone_mobile]',
-        '[vatNumber]' => '[vat_number]',
-        '[stateId]' => '[id_state]',
-    ];
+    public const COMMAND_MAPPING = ['[postCode]' => '[postcode]', '[homePhone]' => '[phone]', '[mobilePhone]' => '[phone_mobile]', '[vatNumber]' => '[vat_number]', '[stateId]' => '[id_state]'];
 }

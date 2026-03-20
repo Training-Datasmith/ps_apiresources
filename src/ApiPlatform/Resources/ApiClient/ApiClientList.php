@@ -18,55 +18,22 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare (strict_types=1);
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Api_Client;
 
-declare(strict_types=1);
-
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\ApiClient;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Search\Filters\ApiClientFilters;
-use PrestaShopBundle\ApiPlatform\Metadata\PaginatedList;
-
-#[ApiResource(
-    operations: [
-        new PaginatedList(
-            uriTemplate: '/api-clients',
-            scopes: [
-                'api_client_read',
-            ],
-            ApiResourceMapping: [
-                '[id_api_client]' => '[apiClientId]',
-                '[client_id]' => '[clientId]',
-                '[client_name]' => '[clientName]',
-                '[external_issuer]' => '[externalIssuer]',
-            ],
-            gridDataFactory: 'prestashop.core.grid.data_factory.api_client',
-            filtersClass: ApiClientFilters::class,
-            filtersMapping: [
-                '[apiClientId]' => '[id_api_client]',
-                '[clientId]' => '[client_id]',
-                '[clientName]' => '[client_name]',
-                '[externalIssuer]' => '[external_issuer]',
-            ],
-        ),
-    ],
-    normalizationContext: ['skip_null_values' => false],
-)]
-class ApiClientList
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Search\Filters\Api_Client_Filters;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Paginated_List;
+#[Api_Resource(operations: [new Paginated_List(uriTemplate: '/api-clients', scopes: ['api_client_read'], ApiResourceMapping: ['[id_api_client]' => '[apiClientId]', '[client_id]' => '[clientId]', '[client_name]' => '[clientName]', '[external_issuer]' => '[externalIssuer]'], gridDataFactory: 'prestashop.core.grid.data_factory.api_client', filtersClass: Api_Client_Filters::class, filtersMapping: ['[apiClientId]' => '[id_api_client]', '[clientId]' => '[client_id]', '[clientName]' => '[client_name]', '[externalIssuer]' => '[external_issuer]'])], normalizationContext: ['skip_null_values' => false])]
+class Api_Client_List
 {
-    #[ApiProperty(identifier: true)]
-    public int $apiClientId;
-
-    public string $clientId;
-
-    public string $clientName;
-
+    #[Api_Property(identifier: true)]
+    public int $api_client_id;
+    public string $client_id;
+    public string $client_name;
     public string $description;
-
-    public ?string $externalIssuer = null;
-
+    public ?string $external_issuer = null;
     public bool $enabled;
-
     public int $lifetime;
 }

@@ -18,84 +18,45 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare (strict_types=1);
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Product;
 
-declare(strict_types=1);
-
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Product;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSDelete;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSGet;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSUpdate;
-use PrestaShopBundle\ApiPlatform\Metadata\LocalizedValue;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-
-#[ApiResource(
-    operations: [
-        new CQRSGet(
-            uriTemplate: '/products/images/{imageId}',
-            CQRSQuery: GetProductImage::class,
-            scopes: [
-                'product_read',
-            ],
-            CQRSQueryMapping: ProductImage::QUERY_MAPPING,
-        ),
-        new CQRSUpdate(
-            // We have to force POST request, because we cannot use PUT with files AND data
-            method: CQRSUpdate::METHOD_POST,
-            uriTemplate: '/products/images/{imageId}',
-            inputFormats: ['multipart' => ['multipart/form-data']],
-            status: Response::HTTP_OK,
-            // Form data value are all string so we disable type enforcement
-            denormalizationContext: [ObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => true],
-            CQRSCommand: UpdateProductImageCommand::class,
-            CQRSQuery: GetProductImage::class,
-            scopes: [
-                'product_write',
-            ],
-            CQRSQueryMapping: ProductImage::QUERY_MAPPING,
-            CQRSCommandMapping: [
-                '[_context][shopConstraint]' => '[shopConstraint]',
-                '[image].pathName' => '[filePath]',
-                '[legends]' => '[localizedLegends]',
-                '[cover]' => '[isCover]',
-            ]
-        ),
-        new CQRSDelete(
-            uriTemplate: '/products/images/{imageId}',
-            CQRSCommand: DeleteProductImageCommand::class,
-        ),
-    ],
-    exceptionToStatus: [
-        ProductImageNotFoundException::class => Response::HTTP_NOT_FOUND,
-    ],
-)]
-class ProductImage
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Product\Image\Command\Delete_Product_Image_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Product\Image\Command\Update_Product_Image_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Product\Image\Exception\Product_Image_Not_Found_Exception;
+use Presta_Shop\Presta_Shop\Core\Domain\Product\Image\Query\Get_Product_Image;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Delete;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Get;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Update;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Localized_Value;
+use Symfony\Component\Http_Foundation\Response;
+use Symfony\Component\Serializer\Normalizer\Object_Normalizer;
+#[Api_Resource(operations: [new Cqrs_Get(uriTemplate: '/products/images/{imageId}', CQRSQuery: Get_Product_Image::class, scopes: ['product_read'], CQRSQueryMapping: Product_Image::QUERY_MAPPING), new Cqrs_Update(
+    // We have to force POST request, because we cannot use PUT with files AND data
+    method: Cqrs_Update::METHOD_POST,
+    uriTemplate: '/products/images/{imageId}',
+    inputFormats: ['multipart' => ['multipart/form-data']],
+    status: Response::HTTP_OK,
+    // Form data value are all string so we disable type enforcement
+    denormalizationContext: [Object_Normalizer::DISABLE_TYPE_ENFORCEMENT => true],
+    CQRSCommand: Update_Product_Image_Command::class,
+    CQRSQuery: Get_Product_Image::class,
+    scopes: ['product_write'],
+    CQRSQueryMapping: Product_Image::QUERY_MAPPING,
+    CQRSCommandMapping: ['[_context][shopConstraint]' => '[shopConstraint]', '[image].pathName' => '[filePath]', '[legends]' => '[localizedLegends]', '[cover]' => '[isCover]']
+), new Cqrs_Delete(uriTemplate: '/products/images/{imageId}', CQRSCommand: Delete_Product_Image_Command::class)], exceptionToStatus: [Product_Image_Not_Found_Exception::class => Response::HTTP_NOT_FOUND])]
+class Product_Image
 {
-    #[ApiProperty(identifier: true)]
-    public int $imageId;
-
-    public string $imageUrl;
-
-    public string $thumbnailUrl;
-
-    #[LocalizedValue]
+    #[Api_Property(identifier: true)]
+    public int $image_id;
+    public string $image_url;
+    public string $thumbnail_url;
+    #[Localized_Value]
     public array $legends;
-
     public bool $cover;
-
     public int $position;
-
-    public array $shopIds;
-
-    public const QUERY_MAPPING = [
-        '[_context][shopConstraint]' => '[shopConstraint]',
-        '[localizedLegends]' => '[legends]',
-    ];
+    public array $shop_ids;
+    public const QUERY_MAPPING = ['[_context][shopConstraint]' => '[shopConstraint]', '[localizedLegends]' => '[legends]'];
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -19,70 +19,23 @@ declare(strict_types=1);
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+namespace Presta_Shop\Module\Api_Resources\Api_Platform\Resources\Product;
 
-namespace PrestaShop\Module\APIResources\ApiPlatform\Resources\Product;
-
-use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
-use PrestaShopBundle\ApiPlatform\Metadata\CQRSCreate;
-use Symfony\Component\HttpFoundation\Response;
-
-#[ApiResource(
-    operations: [
-        new CQRSCreate(
-            uriTemplate: '/products/{productId}/generate-combinations',
-            CQRSCommand: GenerateProductCombinationsCommand::class,
-            scopes: [
-                'product_write',
-            ],
-            ApiResourceMapping: [
-                // Used to denormalize the command result
-                '[@index][combinationId]' => '[newCombinationIds][@index]',
-            ],
-        ),
-    ],
-    exceptionToStatus: [
-        ProductNotFoundException::class => Response::HTTP_NOT_FOUND,
-    ],
-)]
-class GenerateCombinations
+use Api_Platform\Metadata\Api_Property;
+use Api_Platform\Metadata\Api_Resource;
+use Presta_Shop\Presta_Shop\Core\Domain\Product\Combination\Command\Generate_Product_Combinations_Command;
+use Presta_Shop\Presta_Shop\Core\Domain\Product\Exception\Product_Not_Found_Exception;
+use Presta_Shop_Bundle\Api_Platform\Metadata\Cqrs_Create;
+use Symfony\Component\Http_Foundation\Response;
+#[Api_Resource(operations: [new Cqrs_Create(uriTemplate: '/products/{productId}/generate-combinations', CQRSCommand: Generate_Product_Combinations_Command::class, scopes: ['product_write'], ApiResourceMapping: [
+    // Used to denormalize the command result
+    '[@index][combinationId]' => '[newCombinationIds][@index]',
+])], exceptionToStatus: [Product_Not_Found_Exception::class => Response::HTTP_NOT_FOUND])]
+class Generate_Combinations
 {
-    public int $productId;
-    #[ApiProperty(
-        openapiContext: [
-            'type' => 'array',
-            'description' => 'List of new generated combination IDs',
-            'items' => [
-                'type' => 'integer',
-                'description' => 'Combination ID',
-            ],
-        ]
-    )]
-    public array $newCombinationIds = [];
-
-    #[ApiProperty(
-        openapiContext: [
-            'type' => 'array',
-            'items' => [
-                'type' => 'object',
-                'description' => 'List of attributes grouped by their attribute group',
-                'properties' => [
-                    'attributeGroupId' => [
-                        'type' => 'number',
-                        'description' => 'Attribute group ID',
-                    ],
-                    'attributeIds' => [
-                        'type' => 'array',
-                        'items' => [
-                            'type' => 'integer',
-                            'description' => 'Attribute ID',
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    )]
-    public array $groupedAttributes;
+    public int $product_id;
+    #[Api_Property(openapiContext: ['type' => 'array', 'description' => 'List of new generated combination IDs', 'items' => ['type' => 'integer', 'description' => 'Combination ID']])]
+    public array $new_combination_ids = [];
+    #[Api_Property(openapiContext: ['type' => 'array', 'items' => ['type' => 'object', 'description' => 'List of attributes grouped by their attribute group', 'properties' => ['attributeGroupId' => ['type' => 'number', 'description' => 'Attribute group ID'], 'attributeIds' => ['type' => 'array', 'items' => ['type' => 'integer', 'description' => 'Attribute ID']]]]])]
+    public array $grouped_attributes;
 }
